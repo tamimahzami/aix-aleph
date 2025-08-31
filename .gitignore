@@ -1,1 +1,15 @@
-node_modules
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Env / Prisma
+.env
+.prisma
+
+# Backups & Artefakte
+backup_*/
+*.tar.gz
+
+# System
+.DS_Store
