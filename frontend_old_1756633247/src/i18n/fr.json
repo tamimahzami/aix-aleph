@@ -1,0 +1,9 @@
+{
+  "nav": { "home": "Accueil", "about": "À propos", "status": "Statut" },
+  "hero": {
+    "title": "Système nerveux industriel",
+    "subtitle": "Le pont IA entre IT et OT",
+    "description": "AIX Aleph relie l’IA directement aux environnements de production et de flotte : protocoles standard, sécurité zero-trust et contrôle bidirectionnel – sans verrou propriétaire."
+  },
+  "cta": { "start": "Commencer gratuitement", "login": "Se connecter" }
+}

@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "status": "Status",
+    "legal": "Legal",
+    "language": "Language"
+  },
+  "hero": {
+    "title": "Industrial Nervous System",
+    "subtitle": "The AI bridge between IT and OT",
+    "description": "AIX Aleph connects AI directly to production & fleet environments: standard protocols, zero-trust security and bidirectional control — without vendor lock-in."
+  },
+  "cta": {
+    "start": "Start free",
+    "login": "Sign in",
+    "register": "Register"
+  },
+  "stats": {
+    "efficiency": "Efficiency",
+    "downtime": "Downtime",
+    "security": "Security"
+  },
+  "features": {
+    "title": "Powerful Features",
+    "subtitle": "AI-powered platform for modern fleet & production management.",
+    "1": { "title": "AI Forecasts", "description": "Maintenance, utilization & routes optimized in real time." },
+    "2": { "title": "Real-time Tracking", "description": "Detect location, condition & anomalies instantly." },
+    "3": { "title": "Sustainability", "description": "CO₂ reports & energy optimization out-of-the-box." },
+    "4": { "title": "Zero-Trust", "description": "End-to-end security for sensitive OT networks." },
+    "5": { "title": "Deep Analytics", "description": "Dashboards & ad-hoc insights for every role." },
+    "6": { "title": "Integrations", "description": "OPC UA, MQTT, Modbus, ERP/telematics, …" }
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sign in to your account",
+    "registerTitle": "Create account",
+    "registerSubtitle": "Start your trial in seconds",
+    "company": "Company",
+    "password": "Password",
+    "pleaseWait": "Please wait…",
+    "login": "Sign in",
+    "createAccount": "Create account",
+    "noAccount": "No account yet?",
+    "haveAccount": "Already have an account?",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  }
+}

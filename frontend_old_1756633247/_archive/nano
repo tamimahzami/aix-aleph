@@ -1,0 +1,52 @@
+// nano src/components/Header.jsx
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import Logo from "./Logo";
+import "./Header.css";
+
+export default function Header() {
+  const [open, setOpen] = useState(false);
+
+  const Item = ({ to, children }) => (
+    <NavLink
+      to={to}
+      className={({ isActive }) => "nav-item" + (isActive ? " active" : "")}
+      onClick={() => setOpen(false)}
+    >
+      {children}
+    </NavLink>
+  );
+
+  return (
+    <header className="site-header">
+      <div className="container header-row">
+        {/* Brand nur Logo, kein Text */}
+        <Link to="/" className="brand">
+          <Logo />
+        </Link>
+
+        <nav className={"nav" + (open ? " open" : "")}>
+          <Item to="/business">Business Areas</Item>
+          <Item to="/sustainability">Sustainability</Item>
+          <Item to="/citizenship">Citizenship</Item>
+          <Item to="/careers">Jobs</Item>
+          <Item to="/dashboard">Dashboard</Item>
+          <Item to="/login">Login</Item>
+          <Link to="/register" className="btn btn-primary">
+            Kostenlos starten
+          </Link>
+          <Link to="/dashboard-demo">Demo</Link>
+          <Link to="/intelligent-charging">Charging</Link>
+        </nav>
+
+        <button
+          className={"hamburger" + (open ? " is-open" : "")}
+          aria-label="Menü"
+          onClick={() => setOpen(!open)}
+        >
+          <span /><span /><span />
+        </button>
+      </div>
+    </header>
+  );
+}

@@ -1,0 +1,17 @@
+{
+  "header": {
+    "solutions": "Solutions",
+    "vehicles": "Vehicle Types",
+    "about": "About",
+    "insights": "Insights",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register"
+  },
+  "home": {
+    "heroTitle": "Global platform for sustainable mobility",
+    "ctaDemo": "Request demo",
+    "ctaStart": "Get started"
+  }
+}

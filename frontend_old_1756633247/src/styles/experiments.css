@@ -1,0 +1,50 @@
+/* src/styles/experiments.css */
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table th {
+  font-weight: 600;
+  color: #334155;
+  background: #f8fafc;
+}
+
+.table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.table .muted {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.experiment-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.arms {
+  margin-top: 8px;
+}
+
+.arm {
+  margin-bottom: 4px;
+}

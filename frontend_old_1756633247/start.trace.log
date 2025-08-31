@@ -1,0 +1,14 @@
+(node:39416) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+    at Server.normalizeOptions (/Users/tamimahzami/Desktop/UW_PICO_5.09/frontend/node_modules/webpack-dev-server/lib/Server.js:1446:8)
+    at Server.start (/Users/tamimahzami/Desktop/UW_PICO_5.09/frontend/node_modules/webpack-dev-server/lib/Server.js:3309:16)
+    at Server.startCallback (/Users/tamimahzami/Desktop/UW_PICO_5.09/frontend/node_modules/webpack-dev-server/lib/Server.js:3402:10)
+    at /Users/tamimahzami/Desktop/UW_PICO_5.09/frontend/node_modules/react-scripts/scripts/start.js:125:15
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+(node:39416) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+    at Server.normalizeOptions (/Users/tamimahzami/Desktop/UW_PICO_5.09/frontend/node_modules/webpack-dev-server/lib/Server.js:1455:8)
+    at Server.start (/Users/tamimahzami/Desktop/UW_PICO_5.09/frontend/node_modules/webpack-dev-server/lib/Server.js:3309:16)
+    at Server.startCallback (/Users/tamimahzami/Desktop/UW_PICO_5.09/frontend/node_modules/webpack-dev-server/lib/Server.js:3402:10)
+    at /Users/tamimahzami/Desktop/UW_PICO_5.09/frontend/node_modules/react-scripts/scripts/start.js:125:15
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+Starting the development server...
+

@@ -1,0 +1,10 @@
+import React from "react";
+
+export default function IntelligentCharging() {
+  return (
+    <div style={{ padding: "2rem" }}>
+      <h1>Intelligent Charging</h1>
+      <p>Hier kommt später die Logik und Visualisierung für intelligentes Laden.</p>
+    </div>
+  );
+}

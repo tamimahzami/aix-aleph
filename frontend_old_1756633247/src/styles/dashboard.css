@@ -1,0 +1,10 @@
+/* src/styles/dashboard.css */
+.dash-root{display:flex;flex-direction:column;gap:12px}
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.dash-title{font-weight:700}
+.dash-alert{background:#fff3e0;border:1px solid #ffe0b2;border-radius:8px;padding:10px 12px}
+.kpi-card{height:100%}
+.vehicle-row{display:flex;align-items:center;justify-content:space-between;border:1px solid #eee;border-radius:8px;padding:10px 12px;margin-bottom:8px;background:#fff}
+.vehicle-left{display:flex;align-items:center;gap:10px;min-width:0}
+.vehicle-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:#f5f7fb;border:1px solid #e6eaf2;border-radius:6px}
+.vehicle-right{display:flex;align-items:center;gap:12px}

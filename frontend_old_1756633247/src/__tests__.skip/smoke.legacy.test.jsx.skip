@@ -1,0 +1,35 @@
+ async function fillMinimalRegistrationForm(u) {
+   const typeIntoLabel = async (label, value) => {
+     await u.type(screen.getByLabelText(new RegExp(label, "i")), value);
+   };
+
+   // Person/Kontakt
+   await typeIntoLabel("Vorname", "Max");
+   await typeIntoLabel("Nachname", "Mustermann");
+   await typeIntoLabel("Position", "Fleet Manager");
+   await typeIntoLabel("Telefon", "+49 123 456789");
+   await typeIntoLabel("E-Mail", "max@example.com");
+
+-  // Firma
+-  await typeIntoLabel("Firmenname", "AIX Test GmbH");
+-  await u.selectOptions(screen.getByLabelText(/Rechtsform/i), "GmbH");
+-  await typeIntoLabel("USt-IdNr.", "DE123456789");
+-
+-  // Adresse
+-  await typeIntoLabel("Straße", "Testweg");
+-  await typeIntoLabel("Hausnummer", "1");
+-  await typeIntoLabel("Postleitzahl", "12345");
+-  await typeIntoLabel("Stadt", "Teststadt");
+-  await u.selectOptions(screen.getByLabelText(/Land/i), "DE");
+-
+-  // Kontodaten (Passwort)
+-  await typeIntoLabel("Passwort", "SecurePa55!");
+-  await typeIntoLabel("Passwort bestätigen", "SecurePa55!");
+
+   // Plan & Zahlung
+   await u.selectOptions(screen.getByLabelText(/Plan/i), "starter");
+   await u.click(screen.getByLabelText(/Bankeinzug/i)); // default: bank
+
+   // AGB
+   await u.click(screen.getByLabelText(/Ich akzeptiere die AGB/i));
+ }

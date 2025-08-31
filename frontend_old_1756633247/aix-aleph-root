@@ -1,0 +1,10 @@
+{
+  "name": "aix-aleph-root",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n BE,FE -c green,blue \"cd backend && npm run dev\" \"cd frontend && npm start\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

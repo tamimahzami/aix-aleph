@@ -1,0 +1,122 @@
+// src/setupTests.js
+
+// Mock für react-leaflet, um ESM-Fehler in Jest zu vermeiden
+jest.mock('react-leaflet', () => {
+  const React = require('react');
+  const Stub = ({ children }) => React.createElement('div', null, children);
+  return {
+    MapContainer: Stub,
+    TileLayer: Stub,
+    Marker: Stub,
+    Popup: Stub,
+    useMap: () => ({}),
+    useMapEvent: () => ({}),
+    useMapEvents: () => ({})
+  };
+});
+
+import "@testing-library/jest-dom";
+import "whatwg-fetch";
+
+// LocalStorage Mock
+class LocalStorageMock {
+  store = {};
+  getItem = (k) => (k in this.store ? this.store[k] : null);
+  setItem = (k, v) => {
+    this.store[k] = String(v);
+  };
+  removeItem = (k) => {
+    delete this.store[k];
+  };
+  clear = () => {
+    this.store = {};
+  };
+}
+Object.defineProperty(window, "localStorage", {
+  value: new LocalStorageMock(),
+});
+
+// matchMedia Mock
+if (!window.matchMedia) {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: (query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => {}, // deprecated
+      removeListener: () => {}, // deprecated
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }),
+  });
+}
+
+// IntersectionObserver Mock
+if (!("IntersectionObserver" in window)) {
+  class IO {
+    constructor() {}
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+    takeRecords() {
+      return [];
+    }
+  }
+  Object.defineProperty(window, "IntersectionObserver", { value: IO });
+  Object.defineProperty(global, "IntersectionObserver", { value: IO });
+}
+
+// ResizeObserver Mock
+if (!("ResizeObserver" in window)) {
+  class RO {
+    constructor() {}
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  Object.defineProperty(window, "ResizeObserver", { value: RO });
+  Object.defineProperty(global, "ResizeObserver", { value: RO });
+}
+
+// scrollTo Stub
+if (!window.scrollTo) {
+  window.scrollTo = () => {};
+}
+
+// crypto.getRandomValues Mock
+if (!global.crypto) {
+  // eslint-disable-next-line no-undef
+  global.crypto = {};
+}
+if (!global.crypto.getRandomValues) {
+  global.crypto.getRandomValues = (arr) => {
+    for (let i = 0; i < arr.length; i += 1) {
+      arr[i] = Math.floor(Math.random() * 256);
+    }
+    return arr;
+  };
+}
+
+// Optional: TextEncoder/Decoder
+if (typeof global.TextEncoder === "undefined") {
+  const { TextEncoder, TextDecoder } = require("util");
+  global.TextEncoder = TextEncoder;
+  if (typeof global.TextDecoder === "undefined") {
+    global.TextDecoder = TextDecoder;
+  }
+}
+
+// Router-Warnungen reduzieren
+const origError = console.error;
+console.error = (...args) => {
+  if (
+    typeof args[0] === "string" &&
+    args[0].includes("Warning: You seem to have overlapping")
+  ) {
+    return;
+  }
+  origError(...args);
+};
+

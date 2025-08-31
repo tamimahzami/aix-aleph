@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "about": "Über uns",
+    "status": "Status",
+    "legal": "Rechtliches",
+    "language": "Sprache"
+  },
+  "hero": {
+    "title": "Industrielles Nervensystem",
+    "subtitle": "Die KI-Brücke zwischen IT und OT",
+    "description": "AIX Aleph verbindet KI direkt mit Produktions- und Flottenumgebungen: Standardprotokolle, Zero-Trust-Sicherheit und bidirektionale Steuerung – ohne proprietäre Sackgassen."
+  },
+  "cta": {
+    "start": "Kostenlos starten",
+    "login": "Anmelden",
+    "register": "Registrieren"
+  },
+  "stats": {
+    "efficiency": "Effizienz",
+    "downtime": "Ausfallzeiten",
+    "security": "Sicherheit"
+  },
+  "features": {
+    "title": "Leistungsstarke Funktionen",
+    "subtitle": "KI-gestützte Plattform für modernes Flotten- & Produktionsmanagement.",
+    "1": { "title": "KI-Prognosen", "description": "Wartung, Auslastung & Routen in Echtzeit optimiert." },
+    "2": { "title": "Echtzeit-Tracking", "description": "Standort, Zustand & Anomalien sofort erkennen." },
+    "3": { "title": "Nachhaltigkeit", "description": "CO₂-Berichte & Energieoptimierung out-of-the-box." },
+    "4": { "title": "Zero-Trust", "description": "End-to-End-Security für sensible OT-Netze." },
+    "5": { "title": "Deep Analytics", "description": "Dashboards & Ad-hoc-Insights für alle Rollen." },
+    "6": { "title": "Integrationen", "description": "OPC UA, MQTT, Modbus, ERP/Telematik, …" }
+  },
+  "auth": {
+    "loginTitle": "Willkommen zurück",
+    "loginSubtitle": "Melde dich bei deinem Konto an",
+    "registerTitle": "Konto erstellen",
+    "registerSubtitle": "Starte deine Testphase in wenigen Sekunden",
+    "company": "Unternehmen",
+    "password": "Passwort",
+    "pleaseWait": "Bitte warten…",
+    "login": "Anmelden",
+    "createAccount": "Konto erstellen",
+    "noAccount": "Noch kein Konto?",
+    "haveAccount": "Schon ein Konto?",
+    "privacy": "Datenschutz",
+    "terms": "AGB"
+  }
+}

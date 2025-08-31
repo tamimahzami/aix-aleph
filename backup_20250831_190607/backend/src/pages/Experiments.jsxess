@@ -1,0 +1,47 @@
+// src/pages/Experiments.jsx
+import React, { useEffect, useState } from "react";
+import "../styles/page.css";
+import ExperimentTable from "../components/experiments/ExperimentTable";
+
+export default function Experiments() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/experiments");
+        const data = await res.json();
+        setItems(Array.isArray(data) ? data : []);
+      } catch (e) {
+        console.error(e);
+        setItems([]);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  return (
+    <div className="page-container">
+      <section className="page-hero">
+        <h1>Experimente</h1>
+        <p className="muted">A/B & Canary – Champion/Challenger im Überblick.</p>
+      </section>
+
+      <section className="card">
+        {loading ? (
+          <div className="muted">Lade…</div>
+        ) : (
+          <ExperimentTable
+            items={items}
+            onSelect={(exp) => {
+              console.log("Open:", exp);
+              // z. B. navigate(`/experiments/${exp.id}`)
+            }}
+          />
+        )}
+      </section>
+    </div>
+  );
+}

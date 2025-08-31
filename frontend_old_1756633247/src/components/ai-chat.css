@@ -1,0 +1,22 @@
+/* src/components/ai-chat.css – minimal & konfliktfrei */
+.aa-wrap { position: fixed; right: 20px; bottom: 20px; z-index: 60; }
+.aa-btn {
+  appearance: none; border: 0; cursor: pointer;
+  padding: 10px 14px; border-radius: 999px; font-weight: 700;
+  background: linear-gradient(90deg, var(--brand, #2563eb), var(--brand-2, #8b5cf6)); color: #fff;
+  box-shadow: 0 10px 20px rgba(37,99,235,.25);
+}
+.aa-panel {
+  margin-top: 10px; width: min(92vw, 380px); max-height: 70vh; overflow: hidden;
+  background: var(--card, #fff); border: 1px solid #e5e7eb; border-radius: 16px; box-shadow: 0 20px 40px rgba(2,6,23,.18);
+}
+.aa-header { padding: 12px 14px; border-bottom: 1px solid #e5e7eb; font-weight: 700; }
+.aa-body { padding: 12px 14px; max-height: 60vh; overflow: auto; }
+.aa-input { display: flex; gap: 8px; padding: 12px; border-top: 1px solid #e5e7eb; }
+.aa-input input {
+  flex: 1; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 10px;
+}
+.aa-input button {
+  padding: 10px 14px; border-radius: 10px; border: 0; font-weight: 700;
+  background: var(--brand, #2563eb); color: #fff;
+}

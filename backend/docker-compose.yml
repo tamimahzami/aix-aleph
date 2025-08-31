@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: uw_pico_509-backend
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      # deine .env im Image wird ohnehin von Prisma gelesen; optional hier ergänzen
+    expose:
+      - "5001"
+    ports:
+      - "5001:5001"     # <- host:container, damit curl :5001 funktioniert
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5001/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: uw_pico_509-frontend
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - "3000:80"

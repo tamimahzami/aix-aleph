@@ -1,0 +1,17 @@
+{
+  "header": {
+    "solutions": "Solutions",
+    "vehicles": "Types de véhicules",
+    "about": "À propos",
+    "insights": "Analyses",
+    "dashboard": "Tableau de bord",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "S'inscrire"
+  },
+  "home": {
+    "heroTitle": "Plateforme mondiale pour la mobilité durable",
+    "ctaDemo": "Demander une démo",
+    "ctaStart": "Commencer"
+  }
+}
