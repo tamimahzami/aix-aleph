@@ -1,0 +1,33 @@
+/* ... dein bisheriger Inhalt ... */
+
+/* Buttons */
+.btn-primary{
+  @apply inline-flex items-center justify-center rounded-full px-5 py-2 font-semibold transition;
+  background: var(--discord-primary);
+  color: white;
+}
+.btn-primary:hover{
+  filter: brightness(1.05);
+}
+.btn-danger{
+  @apply inline-flex items-center justify-center rounded-full px-5 py-2 font-semibold transition;
+  background: var(--discord-danger);
+  color: white;
+}
+
+/* Karten / Messages (wie Discord-Bubbles) */
+.message{
+  display:flex; gap:12px; padding:12px; border-radius:12px;
+  background:var(--discord-darker);
+}
+.message-avatar{
+  width:40px; height:40px; border-radius:9999px;
+  display:grid; place-items:center; background:var(--discord-server); color:#fff;
+  font-weight:700;
+}
+.message-author{ font-weight:700; color:#fff; }
+.message-text{ color:var(--discord-text); }
+
+/* Link-Styling */
+.link{ color: var(--discord-primary); text-decoration:none; }
+.link:hover{ text-decoration:underline; }

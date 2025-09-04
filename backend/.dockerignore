@@ -1,5 +1,32 @@
+# Dependencies
 node_modules
 npm-debug.log
+package-lock.json
+
+# Prisma / DB
 .prisma
-.env
+*.sqlite
+*.db
 backups
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Docker intern
+Dockerfile
+.dockerignore
+
+# Git
+.git
+.gitignore
+
+# IDE/Editor
+.vscode
+.idea
+*.swp
+
+# Logs & tmp
+*.log
+tmp

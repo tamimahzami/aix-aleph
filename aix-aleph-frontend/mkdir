@@ -1,0 +1,87 @@
+# 1) i18n-Ordnerstruktur anlegen
+mkdir -p src/i18n/locales
+
+# 2) i18n-Setup schreiben
+cat > src/i18n/index.js <<'EOF'
+// src/i18n/index.js
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import de from "./locales/de.json";
+import en from "./locales/en.json";
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources: {
+      de: { translation: de },
+      en: { translation: en }
+    },
+    lng: "de",
+    fallbackLng: "en",
+    interpolation: { escapeValue: false }
+  });
+
+export default i18n;
+EOF
+
+# 3) deutsche Übersetzungen
+cat > src/i18n/locales/de.json <<'EOF'
+{
+  "app.title": "AIX Aleph Mobility",
+  "nav.dashboard": "Dashboard",
+  "nav.experiments": "Experimente",
+  "nav.login": "Anmelden",
+  "nav.register": "Registrieren",
+  "hero.title": "Emissionen senken. E-Mobilität greifbar machen.",
+  "hero.subtitle": "Die Plattform für Flotten, Busbetriebe, Autovermieter und Taxis – datengetrieben zu mehr Reichweite, weniger CO₂ und niedrigeren Kosten.",
+  "cta.getStarted": "Jetzt starten",
+  "cta.learnMore": "Mehr erfahren",
+  "auth.email": "E-Mail",
+  "auth.password": "Passwort",
+  "auth.name": "Name",
+  "auth.login": "Anmelden",
+  "auth.register": "Konto erstellen",
+  "auth.forgot": "Passwort vergessen?",
+  "status.healthy": "gesund",
+  "status.backend": "Backend",
+  "status.ok": "OK",
+  "experiments.title": "Experimente",
+  "experiments.quickCreate": "Schnell anlegen",
+  "experiments.total": "Gesamtanzahl in der Datenbank",
+  "table.name": "Name",
+  "table.status": "Status",
+  "table.arms": "Arme",
+  "table.created": "Erstellt"
+}
+EOF
+
+# 4) englische Übersetzungen
+cat > src/i18n/locales/en.json <<'EOF'
+{
+  "app.title": "AIX Aleph Mobility",
+  "nav.dashboard": "Dashboard",
+  "nav.experiments": "Experiments",
+  "nav.login": "Login",
+  "nav.register": "Register",
+  "hero.title": "Cut emissions. Make e-mobility tangible.",
+  "hero.subtitle": "The platform for fleets, bus operators, car rentals and taxis — data-driven for more range, less CO₂ and lower costs.",
+  "cta.getStarted": "Get started",
+  "cta.learnMore": "Learn more",
+  "auth.email": "Email",
+  "auth.password": "Password",
+  "auth.name": "Name",
+  "auth.login": "Sign in",
+  "auth.register": "Create account",
+  "auth.forgot": "Forgot password?",
+  "status.healthy": "healthy",
+  "status.backend": "Backend",
+  "status.ok": "OK",
+  "experiments.title": "Experiments",
+  "experiments.quickCreate": "Quick Create",
+  "experiments.total": "Total in database",
+  "table.name": "Name",
+  "table.status": "Status",
+  "table.arms": "Arms",
+  "table.created": "Created"
+}
+EOF

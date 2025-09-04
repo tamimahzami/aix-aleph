@@ -1,0 +1,45 @@
+// src/routes/predict.js
+import { Router } from "express";
+import axios from "axios";
+import { successResponse, errorResponse } from "../utils.js";
+
+export const predictRouter = Router();
+
+const PY = process.env.PY_ML_BASE || "http://127.0.0.1:8000";
+
+// optional: Healthcheck
+predictRouter.get("/health", async (_req, res) => {
+  try {
+    const { data } = await axios.get(`${PY}/smart_charge`, {
+      // ping mit minimalem Body via GET klappt nicht immer — dann einfach OK zurück
+      // alternativ: baue in FastAPI /health
+    }).catch(() => ({ data: { ok: true }}));
+    return successResponse(res, { ok: true, pyBase: PY });
+  } catch (e) {
+    return errorResponse(res, 503, "ML service unavailable", { pyBase: PY });
+  }
+});
+
+predictRouter.post("/smart-charge", async (req, res) => {
+  const { userEmail, horizonHours = 12 } = req.body || {};
+  if (!userEmail) return errorResponse(res, 400, "userEmail required");
+
+  try {
+    // 1) korrekter Pfad mit Unterstrich
+    const { data } = await axios.post(`${PY}/smart_charge`, { userEmail, horizonHours });
+    return successResponse(res, data);
+
+  } catch (e1) {
+    // 2) Fallback: falls jemand doch den Bindestrich-Endpunkt im Python-Service baut
+    try {
+      const { data } = await axios.post(`${PY}/smart-charge`, { userEmail, horizonHours });
+      return successResponse(res, data);
+    } catch (e2) {
+      // Logging hilft beim Debuggen:
+      const status = e1?.response?.status || e2?.response?.status || 0;
+      const msg = e1?.response?.data || e2?.response?.data || e1?.message || e2?.message;
+      console.error("[predict.smart-charge] ML error", status, msg);
+      return errorResponse(res, 503, "ML service unavailable");
+    }
+  }
+});

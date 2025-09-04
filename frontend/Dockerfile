@@ -1,16 +1,25 @@
-# --- Build Stage ---
-FROM node:18-alpine AS build
+# --- builder ---
+FROM node:20-alpine AS builder
 WORKDIR /app
+
+# nur deps zuerst -> schnellerer Cache
 COPY package*.json ./
-RUN npm ci
+# robust: ci bevorzugt, fällt bei fehlendem Lockfile auf install zurück
+RUN npm ci || npm install --no-audit --no-fund
+
+# restliches Projekt
 COPY . .
+
+# Production-Build
 RUN npm run build
 
-# --- Serve Stage ---
-FROM nginx:1.27-alpine
-# API-Proxy zu http://backend:5001
+# --- runtime ---
+FROM nginx:alpine
+
+# eigene Nginx-Config (liefert SPA und proxy't /api zum Backend)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-# gebaute Assets
-COPY --from=build /app/dist /usr/share/nginx/html
+
+# gebaute Assets deployen
+COPY --from=builder /app/dist /usr/share/nginx/html
+
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]

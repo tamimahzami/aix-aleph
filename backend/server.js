@@ -1,186 +1,203 @@
-// server.js – minimal & korrekt
+// backend/server.js — Minimal-API (sauber & robust)
+
 const express = require("express");
 const cors = require("cors");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
 
 const app = express();
 const prisma = new PrismaClient();
-const PORT = Number(process.env.PORT || 5001);
 
+const PORT = Number(process.env.PORT || 5001);
+const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
+
+// ---------- Middleware
 app.use(express.json());
 app.use(cors({ origin: true, credentials: true }));
 
-// Health
-app.get("/health", (_req, res) => res.status(200).json({ ok: true }));
-app.get("/api/health", (_req, res) =>
-  res.json({ ok: true, env: process.env.NODE_ENV || "development" })
-);
-
-// Helpers
+// ---------- Helper
 const ok = (res, data) => res.json(data);
 const bad = (res, msg, code = 400) => res.status(code).json({ ok: false, error: msg });
 
-// List
-app.get("/api/experiments", async (_req, res) => {
+// ---------- Auth-Utils
+function signToken(user) {
+  return jwt.sign(
+    { sub: user.id, email: user.email, role: user.role, companyId: user.companyId ?? null },
+    JWT_SECRET,
+    { expiresIn: JWT_EXPIRES_IN }
+  );
+}
+
+function ensureAuth(req, res, next) {
   try {
-    const data = await prisma.experiment.findMany({
-      include: { arms: true, metrics: true },
-      orderBy: { createdAt: "desc" }
-    });
-    ok(res, data);
-  } catch (e) {
-    console.error(e);
-    bad(res, "internal_error", 500);
+    const h = req.headers.authorization || "";
+    const [, token] = h.split(" ");
+    if (!token) return bad(res, "unauthorized", 401);
+    const payload = jwt.verify(token, JWT_SECRET);
+    req.user = payload;
+    req.userId = payload.sub;
+    next();
+  } catch {
+    return bad(res, "unauthorized", 401);
   }
-});
+}
 
-// Details
-app.get("/api/experiments/:id", async (req, res) => {
+// ---------- Status-Enum absichern (Legacy-Werte tolerieren)
+const ALLOWED_STATUS = ["DRAFT","RUNNING","COMPLETED","SCHEDULED","PAUSED","ARCHIVED","FAILED"];
+function normalizeStatus(s) {
+  const v = (s || "DRAFT").toString().toUpperCase();
+  return ALLOWED_STATUS.includes(v) ? v : "DRAFT";
+}
+
+// ---------- Health
+app.get("/api/health", (_req, res) => ok(res, { ok: true, env: process.env.NODE_ENV || "development" }));
+
+// ---------- Login
+app.post("/api/auth/login", async (req, res) => {
   try {
-    const exp = await prisma.experiment.findUnique({
-      where: { id: String(req.params.id) },
-      include: { arms: true, metrics: true }
-    });
-    if (!exp) return bad(res, "not_found", 404);
-    ok(res, exp);
-  } catch (e) {
-    console.error(e);
-    bad(res, "internal_error", 500);
-  }
-});
+    const { email, password } = req.body || {};
+    if (!email || !password) return bad(res, "email and password required", 400);
 
-// Create
-app.post("/api/experiments", async (req, res) => {
-  try {
-    const {
-      name,
-      description = null,
-      type = "AB",
-      status = "DRAFT",
-      strategy = "FIXED",
-      startTime = null,
-      endTime = null,
-      notes = null,
-      decision = null,
-      decisionReason = null,
-      arms = []
-    } = req.body || {};
-
-    if (!name || typeof name !== "string" || !name.trim()) {
-      return bad(res, "name is required");
-    }
-    if (!Array.isArray(arms) || arms.length === 0) {
-      return bad(res, "arms must be a non-empty array");
-    }
-
-    const armsData = arms.map((a) => {
-      if (!a || !a.name || !String(a.name).trim()) {
-        throw new Error("each arm needs a non-empty name");
-      }
-      const initialSplit =
-        a.initialSplit == null ? null : Number(a.initialSplit);
-      if (
-        initialSplit != null &&
-        (!Number.isFinite(initialSplit) || initialSplit < 0 || initialSplit > 100)
-      ) {
-        throw new Error("initialSplit must be between 0 and 100");
-      }
-      return {
-        name: String(a.name),
-        aiModelId: a.aiModelId ?? null,
-        initialSplit,
-        minSplit: a.minSplit ?? null,
-        maxSplit: a.maxSplit ?? null,
-        isChampion: !!a.isChampion
-      };
-    });
-
-    const created = await prisma.experiment.create({
-      data: {
-        name: String(name),
-        description,
-        type,
-        status,
-        strategy,
-        startTime,
-        endTime,
-        notes,
-        decision,
-        decisionReason,
-        arms: { create: armsData }
+    const user = await prisma.user.findUnique({
+      where: { email: String(email) },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        companyId: true,
+        passwordHash: true, // wichtig!
       },
-      include: { arms: true, metrics: true }
     });
 
-    return res.status(201).json(created);
-  } catch (e) {
-    console.error("POST /api/experiments failed:", e);
-    if (e.message?.includes("arm")) return bad(res, e.message, 400);
+    if (!user) return bad(res, "invalid_credentials", 401);
+
+    const valid = await bcrypt.compare(String(password), user.passwordHash);
+    if (!valid) return bad(res, "invalid_credentials", 401);
+
+    const token = signToken(user);
+    return ok(res, { ok: true, token });
+  } catch (err) {
+    console.error("LOGIN_ERROR", err);
     return bad(res, "internal_error", 500);
   }
 });
 
-// Update (klein)
-app.patch("/api/experiments/:id", async (req, res) => {
+// ---------- Me
+app.get("/api/me", ensureAuth, async (req, res) => {
   try {
-    const id = String(req.params.id);
-    const { name, description, status, notes, decision, decisionReason } = req.body || {};
+    const me = await prisma.user.findUnique({
+      where: { id: req.userId },
+      select: { id: true, email: true, name: true, role: true, companyId: true, createdAt: true },
+    });
+    if (!me) return bad(res, "not_found", 404);
+    return ok(res, { ok: true, user: me });
+  } catch (err) {
+    console.error("ME_ERROR", err);
+    return bad(res, "internal_error", 500);
+  }
+});
 
-    const updated = await prisma.experiment.update({
-      where: { id },
+// ---------- Utils: Varianten normalisieren (supports: variants[] oder arms[])
+function normalizeVariants(body) {
+  const raw = Array.isArray(body?.variants)
+    ? body.variants
+    : Array.isArray(body?.arms)
+    ? body.arms
+    : [];
+
+  return raw.map((v, i) => {
+    const name = (v?.name || v?.label || `Variant ${i + 1}`).toString();
+    // bevorzugt weight, sonst initialSplit, sonst 0
+    const weight = Number(v?.weight ?? v?.initialSplit ?? 0);
+    return { name, weight: Number.isFinite(weight) ? weight : 0 };
+  });
+}
+
+// ---------- Experiments: Liste (öffentlich)
+app.get("/api/experiments", async (_req, res) => {
+  try {
+    const data = await prisma.experiment.findMany({
+      include: { variants: true, metrics: true },
+      orderBy: { createdAt: "desc" },
+    });
+    return ok(res, data);
+  } catch (err) {
+    console.error("LIST_EXPERIMENTS_ERROR", err);
+    return bad(res, "internal_error", 500);
+  }
+});
+
+// ---------- Experiments: anlegen (protected) — robust ggü. Feldnamen
+app.post("/api/experiments", ensureAuth, async (req, res) => {
+  try {
+    const headerCompanyId = req.header("x-company-id");
+    const companyId = headerCompanyId || req.user?.companyId;
+    if (!companyId) return bad(res, "company_required", 400);
+
+    const { name, type, status } = req.body || {};
+    if (!name) return bad(res, "name_required", 400);
+
+    const finalStatus = normalizeStatus(status);
+
+    // 1) Experiment ohne Varianten anlegen
+    const experiment = await prisma.experiment.create({
       data: {
-        ...(name != null ? { name: String(name) } : {}),
-        ...(description !== undefined ? { description } : {}),
-        ...(status != null ? { status: String(status) } : {}),
-        ...(notes !== undefined ? { notes } : {}),
-        ...(decision !== undefined ? { decision } : {}),
-        ...(decisionReason !== undefined ? { decisionReason } : {})
+        name: String(name),
+        type: String(type || "AB"),
+        status: finalStatus,
+        company: { connect: { id: companyId } },
       },
-      include: { arms: true, metrics: true }
     });
 
-    ok(res, updated);
-  } catch (e) {
-    if (e.code === "P2025") return bad(res, "not_found", 404);
-    console.error(e);
-    bad(res, "internal_error", 500);
-  }
-});
+    // 2) Varianten anlegen (Schema-A/B automatisch erkennen)
+    const variants = normalizeVariants(req.body);
 
-// Delete
-app.delete("/api/experiments/:id", async (req, res) => {
-  try {
-    const id = String(req.params.id);
-    await prisma.metric.deleteMany({ where: { experimentId: id } });
-    await prisma.arm.deleteMany({ where: { experimentId: id } });
-    await prisma.experiment.delete({ where: { id } });
-    ok(res, { ok: true });
-  } catch (e) {
-    if (e.code === "P2025") return bad(res, "not_found", 404);
-    console.error(e);
-    bad(res, "internal_error", 500);
-  }
-});
+    if (variants.length > 0) {
+      // A) { name, weight, experimentId }
+      const payloadA = variants.map(v => ({
+        name: v.name,
+        weight: v.weight,
+        experimentId: experiment.id,
+      }));
 
-// Metric hinzufügen
-app.post("/api/experiments/:id/metrics", async (req, res) => {
-  try {
-    const experimentId = String(req.params.id);
-    const { armId = null, key, value } = req.body || {};
-    if (!key) return bad(res, "key is required");
-    const num = Number(value);
-    if (!Number.isFinite(num)) return bad(res, "value must be numeric");
+      try {
+        await prisma.experimentVariant.createMany({ data: payloadA });
+      } catch (eA) {
+        // B) { name, initialSplit, experimentId }
+        const payloadB = variants.map(v => ({
+          name: v.name,
+          initialSplit: v.weight,
+          experimentId: experiment.id,
+        }));
+        try {
+          await prisma.experimentVariant.createMany({ data: payloadB });
+        } catch (eB) {
+          console.error("CREATE_VARIANTS_FAILED", {
+            primary: eA?.code || eA?.message,
+            fallback: eB?.code || eB?.message,
+          });
+          // kein Hard-Fail: Experiment bleibt bestehen
+        }
+      }
+    }
 
-    const created = await prisma.metric.create({
-      data: { experimentId, armId: armId ?? null, key: String(key), value: num }
+    // 3) Ergebnis mit Kindern zurückgeben
+    const withChildren = await prisma.experiment.findUnique({
+      where: { id: experiment.id },
+      include: { variants: true, metrics: true },
     });
-    res.status(201).json(created);
-  } catch (e) {
-    console.error(e);
-    bad(res, "internal_error", 500);
+
+    return ok(res, { ok: true, experiment: withChildren });
+  } catch (err) {
+    console.error("CREATE_EXPERIMENT_ERROR_FATAL", { message: err?.message, code: err?.code, meta: err?.meta });
+    return bad(res, "internal_error", 500);
   }
 });
 
+// ---------- Serverstart
 app.listen(PORT, () => {
   console.log(`🚀 API ready on :${PORT}`);
 });

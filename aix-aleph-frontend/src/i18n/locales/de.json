@@ -1,0 +1,21 @@
+{
+  "app": { "title": "AIX Aleph Mobility" },
+  "nav": {
+    "products": "Produkte",
+    "solutions": "Lösungen",
+    "docs": "Docs",
+    "demo": "Demo",
+    "support": "Support",
+    "pricing": "Preise",
+    "bookings": "Buchungen",
+    "payments": "Zahlungen",
+    "api": "API",
+    "sales": "Sales",
+    "contact": "Kontakt",
+    "login": "Login",
+    "register": "Registrieren"
+  },
+  "auth": {
+    "logout": "Logout"
+  }
+}
