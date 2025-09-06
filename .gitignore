@@ -1,19 +1,39 @@
-# Node
+# ─────────────────────────────
+# Node.js
 node_modules/
 npm-debug.log*
+yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+package-lock*.json
 
-# Env / Prisma
+# ─────────────────────────────
+# Build / Outputs
+dist/
+build/
+.vite/
+coverage/
+
+# ─────────────────────────────
+# Cache / Temp
+.cache/
+.eslintcache
+*.tsbuildinfo
+
+# ─────────────────────────────
+# Env / Config
 .env
+.env.*.local
+!.env.example
 .prisma
 
+# ─────────────────────────────
 # Backups & Artefakte
 backup_*/
 *.tar.gz
 
-# System
+# ─────────────────────────────
+# IDE / System
+.vscode/
+.idea/
 .DS_Store
-node_modules
-node_modules/
-.env
-.env.local
