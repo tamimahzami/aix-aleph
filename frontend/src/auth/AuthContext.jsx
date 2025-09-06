@@ -1,38 +1,54 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+// src/auth/AuthContext.jsx
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-const AuthCtx = createContext(null);
+const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(() => localStorage.getItem("token") || null);
-  const [user, setUser] = useState(() => {
-    const raw = localStorage.getItem("user");
-    return raw ? JSON.parse(raw) : null;
-  });
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
-  async function login({ email, password }) {
-    // → HIER ggf. deinen API-Call nutzen. Für jetzt: Demo-Login
-    // const res = await api.login(email, password);
-    // const jwt = res.token;
-    const jwt = "demo.jwt.token"; // Demo
-    const u = { email };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+    const email = localStorage.getItem("email");
+    if (token) {
+      setUser({ id: "local", email: email || "user@example.com", role: role || "user", token });
+    } else {
+      setUser(null);
+    }
+    setLoading(false);
+  }, []);
 
-    localStorage.setItem("token", jwt);
-    localStorage.setItem("user", JSON.stringify(u));
-    setToken(jwt);
-    setUser(u);
+  async function login({ email }) {
+    const fakeToken = "demo-token";
+    localStorage.setItem("token", fakeToken);
+    localStorage.setItem("email", email || "user@example.com");
+    localStorage.setItem("role", "user");
+    setUser({ id: "local", email: email || "user@example.com", role: "user", token: fakeToken });
   }
 
   function logout() {
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setToken(null);
+    localStorage.removeItem("email");
+    localStorage.removeItem("role");
     setUser(null);
   }
 
-  const value = useMemo(() => ({ token, user, login, logout }), [token, user]);
-  return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
+  const value = useMemo(
+    () => ({ user, loading, login, logout, isAuthenticated: !!user }),
+    [user, loading]
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
-  return useContext(AuthCtx);
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within <AuthProvider>");
+  return ctx;
+}
+
+export function useLogout() {
+  const { logout } = useAuth();
+  return logout;
 }

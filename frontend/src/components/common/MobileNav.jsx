@@ -1,117 +1,127 @@
-// src/components/common/MobileNav.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+import { useAuth, useLogout } from "../../auth/AuthContext.jsx";
+import { NAV } from "../../nav.config.js";
+
 export default function MobileNav() {
+  const { isAuthenticated } = useAuth();
+  const logout = useLogout();
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
+  const panelRef = useRef(null);
 
-  // Body-Scroll sperren, wenn Drawer offen
+  const cfg = NAV?.de ?? {
+    primary: [{ id: "home", label: "Home", to: "/" }],
+    cta: { to: "/register", label: "Kostenlos starten" },
+  };
+
+  const isRouteActive = (to) => {
+    if (!to) return false;
+    const norm = (s) => (s || "").replace(/\/+$/, "") || "/";
+    const a = norm(to);
+    const b = norm(pathname);
+    if (a === "/") return b === "/";
+    return b === a || b.startsWith(a + "/");
+  };
+
+  useEffect(() => setOpen(false), [pathname]);
+
   useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = open ? "hidden" : prev || "";
-    return () => { document.body.style.overflow = prev || ""; };
+    if (!open) return;
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const navItems = [
-    { to: "/about", label: "Über uns" },
-    { to: "/features", label: "Funktionen" },
-    { to: "/pricing", label: "Preise" },
-    { to: "/contact", label: "Kontakt" },
-  ];
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e) => {
+      if (panelRef.current && !panelRef.current.contains(e.target)) setOpen(false);
+    };
+    window.addEventListener("click", onClick);
+    return () => window.removeEventListener("click", onClick);
+  }, [open]);
 
   return (
     <>
-      {/* Burger-Button (nur Mobile) */}
       <button
-        className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg ring-line focusable"
-        aria-label="Menü öffnen"
+        type="button"
+        className="p-2 rounded-md border border-[var(--color-border)]"
+        onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        onClick={() => setOpen(true)}
+        aria-controls="mobile-nav"
+        aria-label={open ? "Menü schließen" : "Menü öffnen"}
       >
-        <span className="sr-only">Menü</span>
-        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        </svg>
+        ☰
       </button>
 
-      {/* Overlay */}
       {open && (
-        <button
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm md:hidden"
-          aria-label="Menü schließen"
-          onClick={() => setOpen(false)}
-        />
-      )}
-
-      {/* Drawer */}
-      <aside
-        className={`fixed right-0 top-0 h-full w-[80%] max-w-[340px] md:hidden
-                    bg-[var(--color-surface)] border-l border-[var(--color-line)]
-                    shadow-dc transform transition-transform duration-200
-                    ${open ? "translate-x-0" : "translate-x-full"}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Hauptmenü"
-      >
-        {/* Kopfzeile im Drawer */}
-        <div className="h-16 px-4 flex items-center justify-between border-b border-[var(--color-line)]">
-          <Link
-            to="/"
-            className="flex items-center gap-2 font-extrabold text-[var(--color-primary)]"
-            onClick={() => setOpen(false)}
-          >
-            <span className="w-6 h-6 rounded-full bg-[var(--color-primary)]" />
-            AIX Aleph
-          </Link>
-          <button
-            className="inline-flex items-center justify-center w-10 h-10 rounded-lg ring-line focusable"
-            aria-label="Menü schließen"
-            onClick={() => setOpen(false)}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-          </button>
-        </div>
-
-        {/* Links */}
-        <nav className="px-4 py-4 flex flex-col gap-1">
-          {navItems.map((it) => {
-            const active = pathname.startsWith(it.to);
-            return (
+        <div
+          id="mobile-nav"
+          ref={panelRef}
+          className="absolute top-16 left-0 right-0 bg-[var(--color-bg)] border-b border-[var(--color-border)] shadow-md p-4 space-y-2"
+        >
+          {(cfg.primary || []).map((item) =>
+            item.children ? (
+              <div key={item.label} className="space-y-1">
+                <div className="font-semibold">{item.label}</div>
+                <div className="pl-3 space-y-1">
+                  {item.children.map((child) => (
+                    <Link
+                      key={child.label || child.to}
+                      to={child.to}
+                      className={`block p-2 rounded hover:bg-[var(--color-muted)] ${
+                        isRouteActive(child.to) ? "text-[var(--color-primary)] font-medium" : ""
+                      }`}
+                    >
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : (
               <Link
-                key={it.to}
-                to={it.to}
-                onClick={() => setOpen(false)}
-                className={`w-full text-base font-semibold px-3 py-3 rounded-lg
-                            hover:text-[var(--color-primary)]
-                            ${active ? "text-[var(--color-primary)] bg-white/5" : "text-[var(--color-ink)]"}`}
+                key={item.id || item.label || item.to}
+                to={item.to}
+                className={`block p-2 rounded hover:bg-[var(--color-muted)] ${
+                  isRouteActive(item.to) ? "text-[var(--color-primary)] font-medium" : ""
+                }`}
               >
-                {it.label}
+                {item.label}
               </Link>
-            );
-          })}
-        </nav>
+            )
+          )}
 
-        {/* Auth-Aktionen */}
-        <div className="px-4 pt-2 pb-6 mt-auto flex gap-3">
-          <Link
-            to="/login"
-            className="btn btn-ghost w-full"
-            onClick={() => setOpen(false)}
-          >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            className="btn btn-primary w-full"
-            onClick={() => setOpen(false)}
-          >
-            Registrieren
-          </Link>
+          {!isAuthenticated && cfg.cta?.to && (
+            <Link
+              to={cfg.cta.to}
+              className="inline-block mt-2 w-full text-center px-4 py-2 rounded-md bg-[var(--color-primary)] text-white"
+            >
+              {cfg.cta.label || "Jetzt starten"}
+            </Link>
+          )}
+
+          {isAuthenticated ? (
+            <button
+              type="button"
+              onClick={logout}
+              className="mt-2 w-full px-4 py-2 rounded-md bg-red-500 text-white"
+            >
+              Logout
+            </button>
+          ) : (
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              <Link to="/login" className="px-4 py-2 text-center rounded-md border border-[var(--color-border)]">
+                Login
+              </Link>
+              <Link to="/register" className="px-4 py-2 text-center rounded-md bg-[var(--color-primary)] text-white">
+                Register
+              </Link>
+            </div>
+          )}
         </div>
-      </aside>
+      )}
     </>
   );
 }

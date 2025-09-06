@@ -1,11 +1,13 @@
-// src/routes/legalPdf.js
 import { Router } from "express";
 
-export const legalPdfRouter = Router();
+const legalPdfRouter = Router();
 
-/**
- * Platzhalter-Endpunkte, bis echte PDF-Generierung aktiv ist.
- */
+// Health-Check: GET /api/legal/health
+legalPdfRouter.get("/health", (_req, res) => {
+  res.json({ ok: true, area: "legal-pdf" });
+});
+
+// Platzhalter PDF: GET /api/legal/pdf/:doc
 legalPdfRouter.get("/pdf/:doc", (req, res) => {
   const { doc } = req.params;
   res.status(501).json({
@@ -15,6 +17,4 @@ legalPdfRouter.get("/pdf/:doc", (req, res) => {
   });
 });
 
-legalPdfRouter.get("/health", (_req, res) => {
-  res.json({ ok: true, area: "legal-pdf" });
-});
+export default legalPdfRouter;

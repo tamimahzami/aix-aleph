@@ -1,12 +1,4 @@
-export type NavLink = { label: string; to?: string; desktopOnly?: boolean };
-export type NavGroup = { label: string; children: NavLink[] } | NavLink;
-
-export type NavConfig = {
-  primary: NavGroup[];
-  cta: NavLink;
-};
-
-export const NAV: Record<"de" | "en" | "fr", NavConfig> = {
+export const NAV = {
   de: {
     primary: [
       { label: "Home", to: "/de/" },
@@ -128,3 +120,7 @@ export const NAV: Record<"de" | "en" | "fr", NavConfig> = {
     cta: { label: "Démo", to: "/fr/demo/" },
   },
 };
+
+// Standard: Deutsch
+const cfg = NAV.de;
+export default cfg;

@@ -1,33 +1,122 @@
-/* ... dein bisheriger Inhalt ... */
+/* Tailwind Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Buttons */
-.btn-primary{
-  @apply inline-flex items-center justify-center rounded-full px-5 py-2 font-semibold transition;
-  background: var(--discord-primary);
-  color: white;
-}
-.btn-primary:hover{
-  filter: brightness(1.05);
-}
-.btn-danger{
-  @apply inline-flex items-center justify-center rounded-full px-5 py-2 font-semibold transition;
-  background: var(--discord-danger);
-  color: white;
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Rajdhani:wght@600;700&display=swap');
+
+/* Discord-Farb-Variablen */
+:root {
+  --blurple: #5865f2;
+  --blurple-700: #404eed;
+  --grey-900: #23272a;
+  --grey-800: #2b2d31;
+  --grey-700: #313338;
+  --green: #57f287;
+  --pink: #eb459e;
+  --yellow: #fee75c;
+
+  /* Weitere Variablen */
+  --discord-primary: var(--blurple);
+  --discord-danger: #F23F43;
+  --discord-darker: var(--grey-900);
+  --discord-server: #36393f;
+  --discord-text: #B5BAC1;
 }
 
-/* Karten / Messages (wie Discord-Bubbles) */
-.message{
-  display:flex; gap:12px; padding:12px; border-radius:12px;
-  background:var(--discord-darker);
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, Inter, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--grey-900);
+  color: #fff;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-.message-avatar{
-  width:40px; height:40px; border-radius:9999px;
-  display:grid; place-items:center; background:var(--discord-server); color:#fff;
-  font-weight:700;
-}
-.message-author{ font-weight:700; color:#fff; }
-.message-text{ color:var(--discord-text); }
 
-/* Link-Styling */
-.link{ color: var(--discord-primary); text-decoration:none; }
-.link:hover{ text-decoration:underline; }
+/* Base styles for a clean slate */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-white;
+  }
+
+  p {
+    @apply text-discord-text;
+  }
+  
+  a {
+    @apply text-discord-primary;
+  }
+}
+
+/* Hilfsklassen als Tailwind-Layer (damit @apply klappt) */
+@layer utilities {
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--discord-primary) 10%, transparent);
+    color: var(--discord-primary);
+  }
+  .panel {
+    background: var(--grey-800);
+    border-radius: 1rem;
+  }
+  .text-muted {
+    color: color-mix(in srgb, var(--discord-text) 60%, transparent);
+  }
+  /* Bestehende Klassen... */
+  .btn-primary{
+    @apply inline-flex items-center justify-center rounded-full px-5 py-2 font-semibold transition;
+    background: var(--discord-primary);
+    color: white;
+  }
+  .btn-primary:hover{
+    filter: brightness(1.05);
+  }
+  .btn-danger{
+    @apply inline-flex items-center justify-center rounded-full px-5 py-2 font-semibold transition;
+    background: var(--discord-danger);
+    color: white;
+  }
+
+  /* Karten / Messages (wie Discord-Bubbles) */
+  .message{
+    display:flex;
+    gap:12px;
+    padding:12px;
+    border-radius:12px;
+    background:var(--discord-darker);
+  }
+  .message-avatar{
+    width:40px;
+    height:40px;
+    border-radius:9999px;
+    display:grid;
+    place-items:center;
+    background:var(--discord-server);
+    color:#fff;
+    font-weight:700;
+  }
+  .message-author{
+    font-weight:700;
+    color:#fff;
+  }
+  .message-text{
+    color:var(--discord-text);
+  }
+
+  /* Link-Styling */
+  .link{
+    color: var(--discord-primary);
+    text-decoration:none;
+  }
+  .link:hover{
+    text-decoration:underline;
+  }
+}
+

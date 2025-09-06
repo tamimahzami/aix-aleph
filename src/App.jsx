@@ -13,6 +13,7 @@ import Register from "./pages/Register.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Experiments from "./pages/Experiments.jsx";
 import NotFound from "./pages/NotFound.jsx";
+const Manifesto = React.lazy(() => import("./pages/Manifesto.jsx"));
 
 import { AuthProvider, ProtectedRoute } from "./lib/auth.jsx"; // <— genau so benennen
 
@@ -34,6 +35,7 @@ export default function App() {
               <Route path="/demo" element={<Demo />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="manifesto" element={<Manifesto />} />
 
               {/* geschützt */}
               <Route

@@ -1,63 +1,60 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+// --- replace your seedExperimentIfPossible with this version ---
+async function seedExperimentIfPossible() {
+  const hasExperiment = hasModel("experiment");
+  const hasArm        = hasModel("arm");      // ok if it exists; not required by Metric
+  const hasMetric     = hasModel("metric");
 
-async function main() {
-  // alles leeren
-  await prisma.metric.deleteMany({});
-  await prisma.arm.deleteMany({});
-  await prisma.experiment.deleteMany({});
+  if (!hasExperiment || !hasMetric) {
+    console.log("⏭️  Experiment/Metric Models fehlen – überspringe.");
+    return;
+  }
 
-  // Experiment A
-  const expA = await prisma.experiment.create({
-    data: {
-      name: "Experiment A",
-      description: "Seeded from script",
-      type: "AB",
-      status: "DRAFT",
-      strategy: "FIXED",
-      arms: {
-        create: [
-          { name: "A", initialSplit: 50, isChampion: true },
-          { name: "B", initialSplit: 50 }
-        ]
+  // 1) Experiment sicherstellen
+  let exp = await prisma.experiment.findFirst({ where: { name: "Demo Experiment" } });
+  if (!exp) {
+    exp = await prisma.experiment.create({
+      data: {
+        name: "Demo Experiment",
+        // falls du Enums hast, hier ergänzen:
+        // status: "RUNNING",
+        // type: "AB",
+        // strategy: "FIXED",
+      },
+    });
+  }
+
+  // 2) (Optional) Arme anlegen – NICHT für Metric nötig, nur Demo-Daten
+  if (hasArm) {
+    const upsertArm = async (name, initialSplit) => {
+      let arm = await prisma.arm.findFirst({ where: { experimentId: exp.id, name } });
+      if (!arm) {
+        arm = await prisma.arm.create({ data: { experimentId: exp.id, name, initialSplit } });
       }
-    },
-    include: { arms: true }
-  });
+      return arm;
+    };
+    await upsertArm("A", 60);
+    await upsertArm("B", 40);
+  }
 
-  await prisma.metric.createMany({
-    data: [
-      { experimentId: expA.id, armId: expA.arms[0].id, key: "ctr", value: 0.12 },
-      { experimentId: expA.id, armId: expA.arms[1].id, key: "ctr", value: 0.10 }
-    ]
-  });
+  // 3) Metrics pro Experiment (ohne armId) – unterschiedliche Keys für A/B
+  const ensureMetric = async (key, value) => {
+    let metric = await prisma.metric.findFirst({
+      where: { experimentId: exp.id, key },
+    });
+    if (metric) {
+      await prisma.metric.update({
+        where: { id: metric.id },
+        data: { value },
+      });
+    } else {
+      await prisma.metric.create({
+        data: { experimentId: exp.id, key, value },
+      });
+    }
+  };
 
-  // Experiment B
-  const expB = await prisma.experiment.create({
-    data: {
-      name: "Experiment B",
-      description: "Demo dataset",
-      type: "AB",
-      status: "RUNNING",
-      strategy: "FIXED",
-      arms: {
-        create: [
-          { name: "Control", initialSplit: 60, isChampion: true },
-          { name: "Variant", initialSplit: 40 }
-        ]
-      }
-    },
-    include: { arms: true }
-  });
+  await ensureMetric("ctr_A", 0.12);
+  await ensureMetric("ctr_B", 0.10);
 
-  await prisma.metric.createMany({
-    data: [
-      { experimentId: expB.id, armId: expB.arms[0].id, key: "revenue", value: 123.45 },
-      { experimentId: expB.id, armId: expB.arms[1].id, key: "revenue", value: 111.11 }
-    ]
-  });
-
-  console.log("✅ Seed done");
+  console.log("✅ Experiment + Metrics (ctr_A / ctr_B) seeded.");
 }
-
-main().finally(() => prisma.$disconnect());

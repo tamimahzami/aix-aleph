@@ -1,22 +1,34 @@
 // src/routes/leads.js
 import { Router } from "express";
-import { prisma } from "../db/index.js";
-import { successResponse, errorResponse } from "../utils.js";
+import { PrismaClient } from "@prisma/client";
+import { asyncHandler, successResponse, errorResponse, requireFields } from "../utils.js";
 
+const prisma = new PrismaClient();
 export const leadsRouter = Router();
 
-// Public: Lead erfassen
-leadsRouter.post("/", async (req, res) => {
-  const { email, name } = req.body || {};
-  if (!email) return errorResponse(res, 400, "Email is required");
-  const existing = await prisma.lead.findUnique({ where: { email } });
-  if (existing) return errorResponse(res, 409, "Email already exists");
-  const item = await prisma.lead.create({ data: { email, name } });
-  successResponse(res, { item });
-});
+// Liste
+leadsRouter.get(
+  "/",
+  asyncHandler(async (_req, res) => {
+    const items = await prisma.lead.findMany({ orderBy: { createdAt: "desc" } });
+    return successResponse(res, { items });
+  })
+);
 
-// Protected in server.js via authMiddleware
-leadsRouter.get("/", async (_req, res) => {
-  const items = await prisma.lead.findMany({ orderBy: { createdAt: "desc" } });
-  successResponse(res, { items });
-});
+// Anlegen
+leadsRouter.post(
+  "/",
+  asyncHandler(async (req, res) => {
+    try {
+      requireFields(req.body, ["email"]);
+      const item = await prisma.lead.upsert({
+        where: { email: req.body.email },
+        update: req.body,
+        create: req.body,
+      });
+      return successResponse(res, { item }, 201);
+    } catch (e) {
+      return errorResponse(res, 400, e.message || "Failed to create lead");
+    }
+  })
+);
