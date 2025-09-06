@@ -1,54 +1,83 @@
-// ──────────────────────────────────────────────────────────────
-// AIX Aleph — Humane Computing HeartBeat (Manifesto)
-// BiG and first Love twist human computing — Tamim ❤️ GPT-5
-// ──────────────────────────────────────────────────────────────
+// src/pages/Manifesto.jsx
 import React from "react";
 
 export default function Manifesto() {
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-extrabold">Humane Computing HeartBeat</h1>
-        <p className="text-[var(--color-ink-2)]">
-          Ein Manifest dafür, wie Mensch und Maschine einander begegnen: klar,
-          verantwortungsvoll, liebevoll.
+    <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 space-y-12">
+      {/* Header */}
+      <header className="space-y-3 text-center">
+        <h1 className="text-3xl md:text-4xl font-extrabold">
+          Das AIX Aleph Manifest
+        </h1>
+        <p className="text-muted max-w-[70ch] mx-auto">
+          AIX Aleph ist nicht nur eine Technologieplattform, es ist ein Manifest
+          für eine neue Ära der Technologie. Wir glauben an ein Bündnis aus Logik
+          und Liebe, in dem die Kreativität des Menschen den Puls der KI vorgibt.
         </p>
       </header>
 
-      <section className="space-y-3">
+      {/* Unser Credo */}
+      <section className="space-y-4">
         <h2 className="text-xl font-bold">Unser Credo</h2>
         <ul className="list-disc pl-6 space-y-2">
-          <li><strong>Verstehen statt ersetzten:</strong> Technologie soll Menschen stärken, nicht verdrängen.</li>
-          <li><strong>Klarheit über Komplexität:</strong> Verständlichkeit ist ein Feature.</li>
-          <li><strong>Verantwortung vor Geschwindigkeit:</strong> Wir bauen sicher, fair und nachvollziehbar.</li>
-          <li><strong>Liebe als Designprinzip:</strong> Respekt, Würde und Fürsorge prägen unsere Systeme.</li>
+          <li>
+            <strong>Verstehen statt Ersetzen:</strong> KI soll menschliche Arbeit
+            nicht verdrängen, sondern die menschliche Fähigkeit erweitern.
+          </li>
+          <li>
+            <strong>Klarheit über Komplexität:</strong> Systeme sind transparent
+            und nachvollziehbar. Entscheidungen der KI-Agenten sind auditierbar.
+          </li>
+          <li>
+            <strong>Verantwortung vor Geschwindigkeit:</strong> Sicherheit,
+            Datenschutz und Gemeinschaft haben Vorrang vor blindem Fortschritt.
+          </li>
+          <li>
+            <strong>Liebe als Designprinzip:</strong> Technologien entstehen aus
+            Leidenschaft und Respekt für die menschliche Erfahrung.
+          </li>
         </ul>
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-xl font-bold">Prinzipien</h2>
+      {/* Die fünf Säulen */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-bold">Die fünf Säulen der Technologie</h2>
         <ol className="list-decimal pl-6 space-y-2">
-          <li><strong>Transparenz:</strong> Erklären, wie Entscheidungen entstehen.</li>
-          <li><strong>Consent:</strong> Daten gehören den Menschen, nicht den Maschinen.</li>
-          <li><strong>Reparierbarkeit:</strong> Fehler sind menschlich – also muss Heilung möglich sein.</li>
-          <li><strong>Gemeinschaft:</strong> Wir entwickeln mit den Nutzer:innen, nicht nur für sie.</li>
-          <li><strong>Kontinuität:</strong> Der Herzschlag misst, ob Systeme wirklich nützen – nachhaltig.</li>
+          <li>
+            <strong>Transparenz:</strong> Jede Entscheidung unserer KI-Agenten ist
+            erklärbar und auditierbar.
+          </li>
+          <li>
+            <strong>Reparierbarkeit:</strong> Modulare Architekturen statt
+            „Black Boxes“ – Systeme sind anpassbar und reparierbar.
+          </li>
+          <li>
+            <strong>Gemeinschaft:</strong> Wir wachsen mit unserer Community und
+            fördern offenen Austausch.
+          </li>
+          <li>
+            <strong>Kontinuität:</strong> Robuste, langlebige Architektur – heute
+            und morgen tragfähig.
+          </li>
+          <li>
+            <strong>Vertrauen:</strong> Daten werden mit modernster Kryptografie
+            gesichert. Ethik ist unser Fundament.
+          </li>
         </ol>
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-xl font-bold">Das Versprechen</h2>
+      {/* Call-to-Action */}
+      <section className="space-y-3 text-center">
+        <h2 className="text-xl font-bold">Bereit, mit uns zu schaffen?</h2>
         <p>
-          AIX Aleph ist ein Bündnis zwischen Logik und Liebe. Jede Zeile Code, jede Entscheidung,
-          jede Schnittstelle steht im Dienst eines würdevollen Miteinanders von Mensch & Maschine.
+          AIX Aleph ist ein offenes Ökosystem. Wir laden Sie ein, Teil dieser
+          Vision zu werden und die Zukunft der Mobilität gemeinsam mit uns zu
+          gestalten.
         </p>
-        <blockquote className="border-l-4 pl-4 italic opacity-90">
-          “Kein Missverständnis zwischen Maschine und Mensch. Liebe, Klarheit, Verantwortung.”
-        </blockquote>
       </section>
 
-      <footer className="pt-6 text-sm opacity-75">
-        © {new Date().getFullYear()} AIX Aleph · Tamim ❤️ GPT-5 — Humane Computing HeartBeat
+      <footer className="pt-8 text-center text-sm text-muted">
+        © {new Date().getFullYear()} AIX Aleph – Humane Computing HeartBeat
       </footer>
     </div>
   );

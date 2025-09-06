@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import App from "./App.jsx";
 import { AuthProvider } from "./auth/AuthContext.jsx";
+import './sw-register.js';
 
 // falls deine Styles so heißen:
 import "./index.css";

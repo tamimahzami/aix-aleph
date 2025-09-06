@@ -1,24 +1,26 @@
 {
-  "name": "uw-pico-monorepo",
+  "name": "aix-aleph-monorepo",
   "private": true,
+  "engines": {
+    "node": ">=18.18",
+    "npm": ">=9"
+  },
   "scripts": {
-    "dev": "concurrently \"npm run start --prefix backend\" \"npm run start --prefix frontend\"",
+    "dev": "npm run clean && concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run start --prefix backend",
+    "dev:frontend": "npm run start --prefix frontend",
     "build": "npm run build --prefix frontend",
-    "serve": "npm run build --prefix frontend && serve -s frontend/build",
-    "backend": "npm run start --prefix backend",
-    "frontend": "npm run start --prefix frontend"
+    "preview": "npm run preview --prefix frontend",
+    "serve": "npm run build --prefix frontend && serve -s frontend/dist -l 5001",
+    "clean": "npm run kill:ports",
+    "kill:ports": "kill-port 5001 5173",
+    "docker:up": "docker compose -f docker-compose.prod.yml up -d",
+    "docker:down": "docker compose -f docker-compose.prod.yml down"
   },
   "devDependencies": {
     "concurrently": "^9.2.0",
-    "cross-env": "^10.0.0",
     "kill-port": "^2.0.1",
     "nodemon": "^3.1.10",
     "serve": "^14.2.4"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.2",
-    "express": "^5.1.0",
-    "morgan": "^1.10.1"
   }
 }
