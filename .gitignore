@@ -48,3 +48,19 @@ frontend/dist/
 
 # Web experiments / scratch
 web/
+# ─────────────────────────────
+# Backups / Snapshots / temp
+backup_*/
+backups/
+web/
+frontend_old_*/
+
+# Doppel-Frontend-Pfad
+frontend/frontend/
+
+# Backend public build artefacts
+backend/public/*
+!backend/public/README.md
+!backend/public/manifest.json
+!backend/public/favicon.ico
+!backend/public/favicon.svg
