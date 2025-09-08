@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 4174",
     "build": "vite build",
-    "preview": "vite preview --port 5174"
+    "preview": "vite preview --port 4174"
   },
   "dependencies": {
     "axios": "^1.11.0",

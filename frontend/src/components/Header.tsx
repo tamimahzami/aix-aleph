@@ -1,41 +1,27 @@
-import React from "react";
+// src/components/Header.tsx
+import { Link } from "react-router-dom";
 
-export default function Header({ isAuthed = false }: { isAuthed?: boolean }) {
+export default function Header({ footerToggle }: HeaderProps) {
   return (
-    <header
-      role="banner"
-      className="sticky top-0 z-[1000] w-full"
-      style={{
-        background: "rgba(10,10,26,.92)",
-        backdropFilter: "blur(7px)",
-        borderBottom: "1px solid var(--color-line)",
-      }}
-    >
-      <div className="max-w-[1200px] mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
-        {/* Logo */}
-        <a href="/" className="flex items-center gap-2 focusable" aria-label="AIX ALEPH Startseite">
-          <svg viewBox="0 0 50 50" className="w-9 h-9" aria-hidden="true">
-            <circle cx="25" cy="25" r="22" className="stroke-[3] fill-none" style={{ stroke: "var(--color-primary)" }} />
-            <path d="M10 40 L25 10 L40 40" className="stroke-[3] fill-none" style={{ stroke: "var(--color-primary)" }} />
-          </svg>
-          <span className="text-white font-extrabold tracking-wide">AIX ALEPH</span>
-        </a>
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-black/50 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <Link to="/" className="font-semibold tracking-wide">AIX ALEPH</Link>
 
-        {/* Nav */}
-        <nav className="hidden md:flex items-center gap-2" aria-label="Primärnavigation">
-          <a href="/" className="aix-link">Home</a>
-          <a href="/world" className="aix-link">World</a>
-          <a href="/login" className="aix-link">Login</a>
-        </nav>
+        <nav className="flex items-center gap-3">
+          <Link to="/unternehmen" className="opacity-90 hover:opacity-100">Unternehmen</Link>
+          <Link to="/preise" className="opacity-90 hover:opacity-100">Preise</Link>
+          <Link to="/legal/datenschutz" className="opacity-90 hover:opacity-100">Datenschutz</Link>
 
-        {/* CTA / Auth */}
-        <div className="flex items-center gap-2">
-          {isAuthed ? (
-            <a className="btn btn-ghost" href="/world">Dashboard</a>
-          ) : (
-            <a className="btn btn-primary font-extrabold" href="/login">Demo</a>
+          {footerToggle?.enabled && (
+            <button
+              onClick={() => footerToggle.setShow(!footerToggle.show)}
+              className="ml-4 rounded-md border border-white/15 px-2 py-1 text-xs opacity-75 hover:opacity-100"
+              title="Footer ein/aus (Dev)"
+            >
+              Footer: {footerToggle.show ? "AN" : "AUS"}
+            </button>
           )}
-        </div>
+        </nav>
       </div>
     </header>
   );
