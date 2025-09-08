@@ -1,0 +1,99 @@
+// src/components/common/AgentModal.jsx
+import React from "react";
+
+export default function AgentModal({ open, onClose }) {
+  const [question, setQuestion] = React.useState("");
+  const [messages, setMessages] = React.useState([
+    { role: "ai", text: "Hi! Ich bin der AIX Aleph Agent. Wie kann ich dir helfen?" },
+  ]);
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    if (open) setTimeout(() => ref.current?.focus(), 50);
+  }, [open]);
+
+  function send() {
+    const q = question.trim();
+    if (!q) return;
+    setMessages((m) => [...m, { role: "user", text: q }]);
+    setQuestion("");
+    // Fake-Response (hier später API anbinden)
+    setTimeout(() => {
+      const reply =
+        "Danke für deine Frage! In der Demo orchestrieren KI-Agenten Ladepunkte & E-Flotten. " +
+        "Frag mich z. B.: „Wie optimiere ich Kosten in Berlin?“ oder „Was zeigt die Live-Karte?“";
+      setMessages((m) => [...m, { role: "ai", text: reply }]);
+    }, 400);
+  }
+
+  function key(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
+  }
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="AIX Aleph Agent Chat"
+    >
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[var(--surface)] text-[var(--ink)] shadow-xl aix-agent-panel">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+          <div className="flex items-center gap-2">
+            <div className="w-3.5 h-3.5 rounded-full bg-pink-500 aix-heartbeat" />
+            <p className="text-sm font-semibold">AIX Aleph Agent</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-white/60 hover:text-white text-sm"
+            aria-label="Chat schließen"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="max-h-[50vh] overflow-y-auto p-4 space-y-3">
+          {messages.map((m, i) => (
+            <div
+              key={i}
+              className={`max-w-[85%] rounded-xl px-3 py-2 text-sm leading-relaxed ${
+                m.role === "ai"
+                  ? "bg-white/5 text-white/90"
+                  : "ml-auto bg-[var(--primary)] text-[var(--bg)]"
+              }`}
+              aria-live="polite"
+            >
+              {m.text}
+            </div>
+          ))}
+        </div>
+
+        <div className="p-3 border-t border-white/10">
+          <div className="flex items-end gap-2">
+            <textarea
+              ref={ref}
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              onKeyDown={key}
+              rows={2}
+              placeholder="Frag mich alles über Demo, Preise oder Technik…"
+              className="flex-1 resize-none rounded-xl bg-white/5 text-white/90 placeholder-white/50 px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+            />
+            <button onClick={send} className="btn btn-primary whitespace-nowrap">
+              Senden
+            </button>
+          </div>
+          <p className="mt-2 text-[11px] text-white/50">
+            Hinweis: Dies ist eine lokale Vorschau. Später binden wir hier die echte Agent-API an.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

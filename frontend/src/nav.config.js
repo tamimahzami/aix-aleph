@@ -1,4 +1,3 @@
-// src/nav.config.js
 export const NAV = {
   de: {
     primary: [
@@ -16,15 +15,8 @@ export const NAV = {
       { label: "Unternehmen", to: "/info/unternehmen" },
       { label: "Manifesto", to: "/manifesto" },
       { label: "Kontakt", to: "/info/kontakt" },
-
-      // 👇 Dashboard direkt sichtbar
       { label: "Dashboard", to: "/dashboard" },
     ],
-
-    // 👇 Call-To-Action Button im Header
-    cta: {
-      label: "Jetzt Demo öffnen",
-      to: "/dashboard",
-    },
+    cta: { label: "Jetzt Demo öffnen", to: "/dashboard" },
   },
 };

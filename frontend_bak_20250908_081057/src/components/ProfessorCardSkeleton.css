@@ -1,0 +1,77 @@
+/* src/components/ProfessorCardSkeleton.css */
+
+.message {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #e5e7eb;       /* light gray */
+  border-radius: 12px;
+  background: #f9fafb;             /* very light gray */
+  animation: sk-pulse 1.2s ease-in-out infinite;
+}
+
+.message-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  background: #e5e7eb;
+  color: #6b7280;                   /* gray-500 */
+  font-size: 18px;
+}
+
+.message-content {
+  display: grid;
+  gap: 6px;
+}
+
+.message-author,
+.message-text {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #e5e7eb;
+}
+
+.message-author {
+  height: 14px;
+  width: 40%;
+}
+
+.message-text {
+  height: 12px;
+  width: 70%;
+  background: #eceff1;
+}
+
+/* Optionaler Shimmer */
+.message-author::after,
+.message-text::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: sk-shimmer 1.4s infinite;
+}
+
+/* sanftes Atmen */
+@keyframes sk-pulse {
+  0%   { opacity: 0.65; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.65; }
+}
+
+/* Shimmer über die Balken */
+@keyframes sk-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}

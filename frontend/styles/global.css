@@ -1,0 +1,79 @@
+/* ─────────────── Global Styles AIX ALEPH ─────────────── */
+
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Rajdhani:wght@600;700;800&display=swap");
+
+/* Farben */
+:root {
+  --color-bg: #0a0f1a;
+  --color-bg-alt: #121826;
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-line: rgba(255, 255, 255, 0.1);
+
+  --color-ink: #eaf2ff;
+  --color-ink-muted: #b0b8c9;
+
+  --color-primary: #00f2ff; /* Cyan */
+  --color-secondary: #00ffaa; /* Green */
+  --color-accent: #ff2e72; /* Magenta */
+  --blurple: #5865f2;
+}
+
+/* Body */
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Panels / Cards */
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #0a0f1a;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-ghost {
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
+}
+.btn-ghost:hover {
+  background: var(--color-surface);
+}
+
+/* Muted text */
+.text-muted {
+  color: var(--color-ink-muted);
+}

@@ -1,150 +1,71 @@
-// prisma/schema.prisma
+// prisma/schema.prisma  — FINAL
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL") // z.B. file:./prisma/dev.db
 }
 
-// =========================
-// Auth & User-Management
-// =========================
 model User {
-  id        String        @id @default(uuid())
-  email     String        @unique
-  name      String?
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
   password  String
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  messages  Message[]
-  sessions  ChatSession[]
-  profile   UserProfile?
-}
-
-model UserProfile {
-  id           String   @id @default(uuid())
-  userEmail    String   @unique
-  vehicleMake  String?
-  vehicleModel String?
-  batteryKWh   Float?
-  homeTariff   String?
-  homeLat      Float?
-  homeLng      Float?
-  updatedAt    DateTime @updatedAt
-  createdAt    DateTime @default(now())
-  user         User     @relation(fields: [userEmail], references: [email])
-}
-
-// =========================
-// Applikationsspezifische Daten
-// =========================
-model Experiment {
-  id        String   @id @default(uuid())
-  name      String
-  status    String   @default("DRAFT")
-  arms      Arm[]
-  metrics   Metric[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Arm {
-  id           String     @id @default(uuid())
-  name         String
-  initialSplit Int?
-  experimentId String
-  experiment   Experiment @relation(fields: [experimentId], references: [id])
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-}
-
-model Metric {
-  id           String    @id @default(uuid())
-  name         String?
-  key          String?
-  value        Float
-  timestamp    DateTime?
-  experimentId String
-  experiment   Experiment @relation(fields: [experimentId], references: [id])
-  createdAt    DateTime  @default(now())
-}
-
-model Lead {
-  id        String   @id @default(cuid())
   name      String?
-  email     String   @unique
-  source    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Professor {
-  id           String   @id @default(uuid())
-  name         String
-  title        String?
-  university   String?
-  department   String?
-  bio          String?
-  avatarUrl    String?
-  tagsCsv      String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}
-
-// =========================
-// KI & Chat
-// =========================
-model ChatSession {
-  id        String    @id @default(uuid())
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
-  title     String?
-  messages  Message[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-}
 
-model Message {
-  id        String      @id @default(uuid())
-  sessionId String
-  role      String
-  content   String
-  provider  String?
-  tokensIn  Int?
-  tokensOut Int?
-  latencyMs Int?
-  createdAt DateTime    @default(now())
-  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  user      User?       @relation(fields: [userId], references: [id])
-  userId    String?
+  // Backrelations
+  telemetry   Telemetry[]
+  predictions Prediction[]
 }
 
 model Telemetry {
-  id         String   @id @default(uuid())
-  userEmail  String
-  ts         DateTime @default(now())
+  id         Int       @id @default(autoincrement())
+  timestamp  DateTime  @default(now())
   soc        Float?
-  speed      Float?
-  lat        Float?
-  lng        Float?
   powerKW    Float?
-  odometerKm Float?
+  speed      Float?
   tempC      Float?
-  source     String?
-  @@index([userEmail, ts])
+  odometerKm Float?
+  meta       Json?
+
+  // Optionale weiche Verknüpfung per E-Mail
+  userEmail String?
+  user      User?     @relation(fields: [userEmail], references: [email], onDelete: SetNull, onUpdate: Cascade)
+
+  @@index([timestamp])
+  @@index([userEmail])
 }
 
 model Prediction {
-  id          String    @id @default(uuid())
-  kind        String
-  userEmail   String
-  inputHash   String
-  resultJson  String
-  createdAt   DateTime  @default(now())
-  expiresAt   DateTime?
-  @@index([userEmail, kind, inputHash])
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  model      String?
+  input      Json?
+  output     Json?
+
+  // Optionale weiche Verknüpfung per E-Mail
+  userEmail String?
+  user      User?     @relation(fields: [userEmail], references: [email], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([createdAt])
+  @@index([userEmail])
 }
 
+model Experiment {
+  id          Int       @id @default(autoincrement())
+  slug        String    @unique
+  title       String
+  description String?
+  status      String    @default("draft") // draft | running | done | failed
+  config      Json?
+  result      Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status])
+  @@index([updatedAt])
+}

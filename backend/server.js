@@ -1,63 +1,46 @@
-// server.js — Minimal-API (ESM, modular)
-
-import express from "express";
-import cors from "cors";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-
-import { prisma } from "./src/db/index.js";
-import { successResponse, errorResponse } from "./src/utils.js";
-import { experimentsRouter } from "./src/routes/experiments.js"; // bereits vorhanden
+// server.js (ESM)
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import agentRoutes from './routes/agentRoutes.js'; // default export
 
 const app = express();
+const PORT = process.env.PORT || 4000;
 
-const PORT = Number(process.env.PORT || 5001);
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
+// CORS
+const ORIGINS = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
 
-// ---------- Middleware
-app.use(express.json());
-app.use(cors({ origin: true, credentials: true }));
+app.use(express.json({ limit: '1mb' }));
+app.use(cors({
+  origin(origin, cb) {
+    if (!origin) return cb(null, true);
+    if (ORIGINS.length === 0 || ORIGINS.includes(origin)) return cb(null, true);
+    return cb(new Error('Not allowed by CORS: ' + origin), false);
+  },
+  credentials: true,
+}));
 
-// ---------- Auth-Utils (unverändert, nur als ESM)
-function signToken(user) {
-  return jwt.sign(
-    { sub: user.id, email: user.email, role: user.role ?? null, companyId: user.companyId ?? null },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN }
-  );
-}
+// Health
+app.get('/health', (_req, res) => res.json({ ok: true }));
 
-function ensureAuth(req, res, next) {
-  try {
-    const h = req.headers.authorization || "";
-    const [, token] = h.split(" ");
-    if (!token) return errorResponse(res, 401, "unauthorized");
-    const payload = jwt.verify(token, JWT_SECRET);
-    req.user = payload;
-    req.userId = payload.sub;
-    next();
-  } catch {
-    return errorResponse(res, 401, "unauthorized");
-  }
-}
+// Agent API
+app.use('/agent', agentRoutes);
 
-// ---------- Health
-app.get("/api/health", (_req, res) =>
-  successResponse(res, { env: process.env.NODE_ENV || "development" })
-);
-
-// ---------- Router mounten
-app.use("/api/experiments", experimentsRouter);
-
-// (Optional) Beispiel: geschützte Route
-app.get("/api/me", ensureAuth, async (req, res) => {
-  const me = await prisma.user.findUnique({ where: { id: req.userId } });
-  if (!me) return errorResponse(res, 404, "User not found");
-  successResponse(res, { user: me });
+// 404 JSON
+app.use((req, res) => {
+  res.status(404).json({ message: `Not Found: ${req.method} ${req.originalUrl}` });
 });
 
-// ---------- Start
+// Fehler-Handler
+// eslint-disable-next-line no-unused-vars
+app.use((err, _req, res, _next) => {
+  const status = err.status || 500;
+  res.status(status).json({ message: err.message || 'Internal Server Error' });
+});
+
 app.listen(PORT, () => {
-  console.log(`[api] listening on http://localhost:${PORT}`);
+  console.log(`Backend listening on http://localhost:${PORT}`);
 });

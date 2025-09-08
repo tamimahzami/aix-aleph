@@ -1,31 +1,26 @@
-/** @type {import('tailwindcss').Config} */
+// tailwind.config.js
+import typography from "@tailwindcss/typography";
+
 export default {
-  darkMode: 'class',
   content: [
-    './index.html',
-    './src/**/*.{js,jsx,ts,tsx}',
+    "./index.html",
+    "./src/**/*.{js,jsx,ts,tsx}"
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: [
-          'Inter',
-          'ui-sans-serif','system-ui','-apple-system','Segoe UI','Roboto',
-          'Helvetica','Arial','Apple Color Emoji','Segoe UI Emoji',
-        ],
+      colors: {
+        "color-bg": "#0f1117",
+        "color-surface": "#1a1d26",
+        "color-line": "#2b2d31",
+        "color-ink": "#e5e7eb",
+        "color-ink-muted": "#9ca3af",
+        "color-primary": "#00f2ff",
+        "blurple": "#5865f2",
       },
       boxShadow: {
-        dc: '0 12px 32px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.35)',
+        dc: "0 2px 8px rgba(0,0,0,0.4)",
       },
     },
   },
-  // Wichtig: KEINE Regex hier – nur konkrete Klassen, die du mit CSS-Variablen nutzt
-  safelist: [
-    'bg-[var(--color-bg)]',
-    'bg-[var(--color-surface)]',
-    'text-[var(--color-ink)]',
-    'text-[var(--color-ink-muted)]',
-    'border-[var(--color-line)]',
-  ],
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [typography],
 };
