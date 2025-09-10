@@ -71,3 +71,8 @@ backend/public/*
 !backend/public/manifest.json
 !backend/public/favicon.ico
 !backend/public/favicon.svg
+node_modules/
+dist/
+build/
+.env*
+.DS_Store

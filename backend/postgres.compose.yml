@@ -1,0 +1,16 @@
+# postgres.compose.yml
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: uw_pico_509-postgres-1
+    restart: always
+    environment:
+      POSTGRES_DB: aixaleph
+      POSTGRES_USER: aix
+      POSTGRES_PASSWORD: aixpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db:/var/lib/postgresql/data
+

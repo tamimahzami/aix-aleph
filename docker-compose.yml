@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: aixaleph
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U postgres -d aixaleph"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    environment:
+      # WICHTIG: im Container ist Hostname 'postgres' (Service-Name)
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/aixaleph?schema=public
+      PORT: 5001
+      NODE_ENV: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "5001:5001"
+    # Optional: Live-Dev (Code-Mount), wenn du lokal editierst
+    volumes:
+      - ./backend:/app
+
+volumes:
+  pgdata:

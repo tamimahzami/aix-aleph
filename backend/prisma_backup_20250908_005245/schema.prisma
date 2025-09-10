@@ -1,0 +1,150 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =========================
+// Auth & User-Management
+// =========================
+model User {
+  id        String        @id @default(uuid())
+  email     String        @unique
+  name      String?
+  password  String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  messages  Message[]
+  sessions  ChatSession[]
+  profile   UserProfile?
+}
+
+model UserProfile {
+  id           String   @id @default(uuid())
+  userEmail    String   @unique
+  vehicleMake  String?
+  vehicleModel String?
+  batteryKWh   Float?
+  homeTariff   String?
+  homeLat      Float?
+  homeLng      Float?
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userEmail], references: [email])
+}
+
+// =========================
+// Applikationsspezifische Daten
+// =========================
+model Experiment {
+  id        String   @id @default(uuid())
+  name      String
+  status    String   @default("DRAFT")
+  arms      Arm[]
+  metrics   Metric[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Arm {
+  id           String     @id @default(uuid())
+  name         String
+  initialSplit Int?
+  experimentId String
+  experiment   Experiment @relation(fields: [experimentId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Metric {
+  id           String    @id @default(uuid())
+  name         String?
+  key          String?
+  value        Float
+  timestamp    DateTime?
+  experimentId String
+  experiment   Experiment @relation(fields: [experimentId], references: [id])
+  createdAt    DateTime  @default(now())
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  source    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Professor {
+  id           String   @id @default(uuid())
+  name         String
+  title        String?
+  university   String?
+  department   String?
+  bio          String?
+  avatarUrl    String?
+  tagsCsv      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// =========================
+// KI & Chat
+// =========================
+model ChatSession {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  title     String?
+  messages  Message[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Message {
+  id        String      @id @default(uuid())
+  sessionId String
+  role      String
+  content   String
+  provider  String?
+  tokensIn  Int?
+  tokensOut Int?
+  latencyMs Int?
+  createdAt DateTime    @default(now())
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user      User?       @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Telemetry {
+  id         String   @id @default(uuid())
+  userEmail  String
+  ts         DateTime @default(now())
+  soc        Float?
+  speed      Float?
+  lat        Float?
+  lng        Float?
+  powerKW    Float?
+  odometerKm Float?
+  tempC      Float?
+  source     String?
+  @@index([userEmail, ts])
+}
+
+model Prediction {
+  id          String    @id @default(uuid())
+  kind        String
+  userEmail   String
+  inputHash   String
+  resultJson  String
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  @@index([userEmail, kind, inputHash])
+}
+

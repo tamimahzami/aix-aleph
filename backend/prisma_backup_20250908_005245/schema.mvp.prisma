@@ -1,0 +1,69 @@
+// ======================================
+// AIX Aleph — Prisma MVP Schema (SQLite)
+// ======================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL") // "file:./prisma/dev.db"
+}
+
+// ----------------------
+// MVP: Experiments/Arms/Metrics
+// ----------------------
+
+model Experiment {
+  id             String    @id @default(cuid())
+  organizationId String?
+  createdById    String?
+  name           String
+  description    String?
+  type           String     // z.B. "AB"
+  status         String     // "DRAFT" | "RUNNING" | ...
+  strategy       String     // "FIXED" | ...
+  aiModelId      String?
+  routeId        String?
+  pricingModelId String?
+  startTime      DateTime?
+  endTime        DateTime?
+  notes          String?
+  decision       String?    // "UNDECIDED" | ...
+  decisionReason String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  arms    Arm[]
+  metrics Metric[]
+
+  @@map("experiments")
+}
+
+model Arm {
+  id           String   @id @default(cuid())
+  experimentId String
+  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  name         String
+  aiModelId    String?
+  initialSplit Float?
+  minSplit     Float?
+  maxSplit     Float?
+  isChampion   Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("arms")
+}
+
+model Metric {
+  id           String   @id @default(cuid())
+  experimentId String
+  experiment   Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  key          String
+  value        Float
+  createdAt    DateTime  @default(now())
+
+  @@map("metrics")
+}

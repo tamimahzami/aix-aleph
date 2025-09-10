@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Eigene Styles ohne @layer/@import */
+:root { --page-padding: 1rem; }
+
+.btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-medium transition-colors; }
+.btn-primary { @apply btn bg-blue-600 text-white hover:bg-blue-700; }
+.btn-outline { @apply btn border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white; }
+
+.card { @apply rounded-xl border bg-white/50 p-6 shadow; }
+.page-section { @apply w-full; }
