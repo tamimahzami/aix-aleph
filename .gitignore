@@ -5,7 +5,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-package-lock.json
+# Achtung: package-lock.json nur ignorieren, wenn du es bewusst NICHT versionieren willst.
+# Für reproduzierbare Builds empfiehlt es sich, die Lockfile einzuchecken.
+# package-lock.json
 
 # ─────────────────────────────
 # Build / Outputs
@@ -25,12 +27,7 @@ coverage/
 .env
 .env.*.local
 !.env.example
-.prisma
-
-# ─────────────────────────────
-# Backups & Artefakte
-backup_*/
-*.tar.gz
+.prisma/
 
 # ─────────────────────────────
 # IDE / System
@@ -38,27 +35,37 @@ backup_*/
 .idea/
 .DS_Store
 
-# Frontend public build artefacts
-# Vite kopiert den Inhalt von 'public' nach 'dist'
-frontend/dist/
+# ─────────────────────────────
+# Backups / Artefakte / Snapshots
+backup_*/
+backups/
+frontend-backup/
+_backup_storage/frontend-backup/
+frontend_backup_*/
+frontend_bak_*/
+*.zip
+*.tar
+*.tar.gz
+
+# ─────────────────────────────
+# Web experiments / scratch
+web/
+frontend_old_*/
+
+# ─────────────────────────────
+# Doppel-Frontend-Pfad
+frontend/frontend/
+
+# ─────────────────────────────
+# Frontend public build artefacts (alles ignorieren, außer Whitelist)
+frontend/dist/*
 !frontend/dist/README.md
 !frontend/dist/manifest.json
 !frontend/dist/favicon.ico
 !frontend/dist/favicon.svg
 
-# Web experiments / scratch
-web/
 # ─────────────────────────────
-# Backups / Snapshots / temp
-backup_*/
-backups/
-web/
-frontend_old_*/
-
-# Doppel-Frontend-Pfad
-frontend/frontend/
-
-# Backend public build artefacts
+# Backend public build artefacts (alles ignorieren, außer Whitelist)
 backend/public/*
 !backend/public/README.md
 !backend/public/manifest.json

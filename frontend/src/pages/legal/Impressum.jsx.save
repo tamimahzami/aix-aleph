@@ -1,7 +1,0 @@
-import React from "react";import React from "react"; import SimplePage from "../_SimplePage.jsx"; export default function Impressum() { export default function Impressum() { return <SimplePage 
-title="Impressum"><p>Unternehmensangaben (Platzhalter).</p></SimplePage>; }
-  return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10 space-y-2">
-      <h1 className="text-3xl font-extrabold">Impressum</h1> <p>AIX Aleph – Firmenangaben (Platzhalter)</p>
-    </div>
-  ); }
