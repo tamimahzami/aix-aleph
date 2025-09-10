@@ -1,46 +1,67 @@
-// server.js (ESM)
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import agentRoutes from './routes/agentRoutes.js'; // default export
+// server.js
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 4000;
 
-// CORS
-const ORIGINS = (process.env.CORS_ORIGIN || '')
+// ── Config ──────────────────────────────────────────────
+const PORT = Number(process.env.PORT || 4000);
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+
+function allowDevWildcard(origin) {
+  if (!origin) return true; // curl/Postman
+  try {
+    const u = new URL(origin);
+    return u.hostname === 'localhost' || u.hostname === '127.0.0.1';
+  } catch {
+    return false;
+  }
+}
+
+const ALLOWED_ORIGINS = (process.env.CORS_ORIGIN || '')
   .split(',')
   .map(s => s.trim())
   .filter(Boolean);
 
-app.use(express.json({ limit: '1mb' }));
+// ── Middleware ─────────────────────────────────────────
 app.use(cors({
   origin(origin, cb) {
+    if (NODE_ENV === 'development' && allowDevWildcard(origin)) return cb(null, true);
     if (!origin) return cb(null, true);
-    if (ORIGINS.length === 0 || ORIGINS.includes(origin)) return cb(null, true);
-    return cb(new Error('Not allowed by CORS: ' + origin), false);
+    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    return cb(new Error(`CORS blocked for origin: ${origin}`));
   },
   credentials: true,
 }));
+app.use(express.json());
 
-// Health
+// ── Routes ─────────────────────────────────────────────
 app.get('/health', (_req, res) => res.json({ ok: true }));
 
-// Agent API
-app.use('/agent', agentRoutes);
-
-// 404 JSON
-app.use((req, res) => {
-  res.status(404).json({ message: `Not Found: ${req.method} ${req.originalUrl}` });
+app.get('/api/version', (_req, res) => {
+  res.json({ name: 'aix-aleph-backend', version: '0.1.0', env: NODE_ENV });
 });
+
+app.post('/api/echo', (req, res) => {
+  res.json({ received: req.body ?? null });
+});
+
+// 404
+app.use((req, res) => res.status(404).json({ message: `Not Found: ${req.method} ${req.path}` }));
 
 // Fehler-Handler
-// eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
-  const status = err.status || 500;
-  res.status(status).json({ message: err.message || 'Internal Server Error' });
+  if (LOG_LEVEL === 'debug') console.error(err);
+  res.status(500).json({ message: 'Internal Server Error' });
 });
 
+// ── Start ──────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`Backend listening on http://localhost:${PORT}`);
+  const allow = NODE_ENV === 'development'
+    ? '(dev wildcard: localhost/127.0.0.1 erlaubt)'
+    : `CORS Origins: ${JSON.stringify(ALLOWED_ORIGINS)}`;
+  console.log(`Backend läuft auf http://127.0.0.1:${PORT}`);
+  console.log(allow);
 });

@@ -1,0 +1,103 @@
+/* ===============================
+   Buttons – safe, readable, crisp
+   =============================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .625rem 1rem;          /* 10px 16px */
+  border-radius: 9999px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform .12s ease, opacity .12s ease, background-color .16s ease, border-color .16s ease, color .16s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active { transform: translateY(1px); }
+.btn[disabled], .btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary (blurple) */
+.btn-primary {
+  background: var(--blurple);
+  color: #fff !important;                 /* 💡 Text bleibt weiß */
+  border-color: var(--blurple);
+}
+.btn-primary:hover {
+  filter: brightness(0.94);
+  color: #fff !important;                 /* 💡 auch beim Hover */
+}
+.btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--blurple) 30%, #fff);
+}
+
+/* Ghost (dezent) */
+.btn-ghost {
+  background: transparent;
+  color: var(--color-ink) !important;     /* 💡 sichere Schriftfarbe */
+  border-color: var(--color-line);
+}
+.btn-ghost:hover {
+  background: color-mix(in oklab, var(--color-surface) 70%, #fff 0%);
+  color: var(--color-ink) !important;
+  border-color: var(--color-line);
+}
+.btn-ghost:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--blurple) 24%, transparent);
+}
+
+/* Danger (Logout) */
+.btn-danger {
+  background: #ef4444;
+  color: #fff !important;
+  border-color: #ef4444;
+}
+.btn-danger:hover { filter: brightness(0.95); }
+.btn-danger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklab, #ef4444 28%, #fff);
+}
+
+/* Icon-only buttons inherit readable colors */
+.btn svg { flex: 0 0 auto; }
+
+/* High-contrast users get stronger borders */
+@media (prefers-contrast: more) {
+  .btn-ghost { border-color: color-mix(in oklab, var(--color-line) 70%, #fff); }
+  .btn { box-shadow: none !important; }
+}
+
+/* Optional: special neon CTA (du hast 'neon' schon genutzt) */
+.neon {
+  box-shadow:
+    0 0 0.5rem color-mix(in oklab, var(--blurple) 50%, transparent),
+    0 0 1.2rem color-mix(in oklab, var(--blurple) 40%, transparent);
+}
+.neon:hover {
+  box-shadow:
+    0 0 0.6rem color-mix(in oklab, var(--blurple) 60%, transparent),
+    0 0 1.4rem color-mix(in oklab, var(--blurple) 50%, transparent);
+}
+
+/* Subtitel überall schön einzeilig / gekürzt */
+.subtitle,
+.text-muted,
+.hero-subtitle {
+  max-width: 70ch;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;        /* 2 Zeilen; bei Bedarf 1 machen */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

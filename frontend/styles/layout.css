@@ -1,0 +1,71 @@
+/* ===== AIX Aleph – Layout-Basics & Design Tokens ===== */
+
+/* Farb-Tokens (Light + optional Dark via .dark) */
+:root {
+  --color-bg: #ffffff;
+  --color-ink: #0f172a;          /* Slate-900 */
+  --color-ink-muted: #475569;    /* Slate-600 */
+  --color-line: #e2e8f0;         /* Slate-200 */
+  --color-primary: #2563eb;      /* Blue-600 */
+  --color-primary-ink: #ffffff;
+}
+
+.dark {
+  --color-bg: #0b1220;
+  --color-ink: #e5e7eb;          /* Gray-200 */
+  --color-ink-muted: #94a3b8;    /* Slate-400 */
+  --color-line: #1f2937;         /* Gray-800 */
+  --color-primary: #60a5fa;      /* Blue-300 */
+  --color-primary-ink: #0b1220;
+}
+
+/* Grundlayout */
+html, body {
+  height: 100%;
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* Typografie */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  line-height: 1.5;
+}
+
+/* Hilfsklassen, die Du im JSX nutzt */
+.muted { color: var(--color-ink-muted); }
+.break-any { overflow-wrap: anywhere; }
+
+/* Links/Buttons – dezent nach Tokens */
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+button {
+  color: inherit;
+}
+
+/* Karten / Container */
+.card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+}
+
+/* Wenn du systemweiten Dark-Mode automatisch willst,
+   ergänze zusätzlich (optional) die folgende Präferenz: */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-bg: #0b1220;
+    --color-ink: #e5e7eb;
+    --color-ink-muted: #94a3b8;
+    --color-line: #1f2937;
+    --color-primary: #60a5fa;
+    --color-primary-ink: #0b1220;
+  }
+}

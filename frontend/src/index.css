@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Zentrale Cockpit-Styles laden */
+@import "./styles/layout.css";

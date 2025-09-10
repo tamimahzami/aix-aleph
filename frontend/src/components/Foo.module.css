@@ -1,0 +1,4 @@
+/* z.B. src/components/Foo.module.css */
+@reference "tailwindcss";
+
+.wrapper { @apply py-10 px-4; }  /* jetzt erkannt */

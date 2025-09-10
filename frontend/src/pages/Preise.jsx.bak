@@ -1,0 +1,138 @@
+// src/pages/Preise.jsx
+import React from "react";
+import { Link } from "react-router-dom";
+import ContainerMax from "../components/common/ContainerMax.jsx";
+
+const tiers = [
+  {
+    name: "Community",
+    price: "Kostenlos",
+    period: "",
+    highlight: "Für Studium, Prototyping & Open Research",
+    cta: { label: "Jetzt starten", to: "/demo", variant: "btn-outline" },
+    features: [
+      "AIX Core APIs (Read-only Sim)",
+      "2 Depots / 10 Fahrzeuge",
+      "Basis-Orchestrierung (Tarif + CO₂)",
+      "Open Datasets & Fixtures",
+      "E-Mail Support (asynchron)",
+    ],
+  },
+  {
+    name: "Pilot",
+    price: "€ 1.490",
+    period: "/ Monat",
+    highlight: "Validierung mit echtem Betrieb",
+    badge: "Beliebt",
+    cta: { label: "Pilot anfragen", to: "/plan", variant: "btn" },
+    features: [
+      "AIX Core + Write Ops",
+      "Bis 5 Depots / 150 Fahrzeuge",
+      "Smart Charging + Peak Shaving",
+      "Audit-Trails & Compliance-Views",
+      "Dedicated Slack (D-48h)",
+    ],
+  },
+  {
+    name: "Enterprise",
+    price: "Kontakt",
+    period: "",
+    highlight: "Skalierung + Integrationen + SLA",
+    cta: { label: "Mit uns sprechen", to: "/plan", variant: "btn" },
+    features: [
+      "Unlimitiert Depots/Fahrzeuge",
+      "ISO 27001-ready, RBAC, SSO",
+      "Custom Tarife/CO₂/Telemetrie-Adapter",
+      "On-Prem/Hybrid Optionen",
+      "SLA & 24/7 Incident-Response",
+    ],
+  },
+];
+
+const compare = [
+  {
+    feat: "Orchestrierungs-Engine (Tarif, CO₂, Peak)",
+    community: "Basis",
+    pilot: "Voll",
+    enterprise: "Erweitert",
+  },
+  {
+    feat: "Audit & Reproduzierbarkeit",
+    community: "Partial",
+    pilot: "Voll",
+    enterprise: "Voll + GRC",
+  },
+  {
+    feat: "Telemetrie-Adapter",
+    community: "Sim",
+    pilot: "Standard",
+    enterprise: "Custom",
+  },
+  {
+    feat: "Security & Compliance",
+    community: "Best Effort",
+    pilot: "ISO-ready",
+    enterprise: "Enterprise Suite",
+  },
+];
+
+function TierCard({ tier }) {
+  const Wrapper = ({ children }) => (
+    <div
+      className={[
+        "card relative flex flex-col",
+        tier.badge ? "ring-1 ring-[var(--color-primary)]/30" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {children}
+    </div>
+  );
+
+  return (
+    <Wrapper>
+      {tier.badge && (
+        <div className="absolute -top-3 right-3 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary border border-primary/30">
+          {tier.badge}
+        </div>
+      )}
+
+      <div className="mb-3 text-sm uppercase tracking-wide opacity-80">
+        {tier.name}
+      </div>
+
+      <div className="flex items-baseline gap-2">
+        <div className="text-3xl font-extrabold">{tier.price}</div>
+        {tier.period && <div className="opacity-70">{tier.period}</div>}
+      </div>
+
+      <div className="mt-2 text-sm muted">{tier.highlight}</div>
+
+      <ul className="mt-5 space-y-2 text-sm">
+        {tier.features.map((f) => (
+          <li key={f} className="flex items-start gap-2">
+            <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-6">
+        <Link
+          to={tier.cta.to}
+          className={[
+            tier.cta.variant || "btn",
+            "w-full justify-center",
+          ].join(" ")}
+        >
+          {tier.cta.label}
+        </Link>
+      </div>
+    </Wrapper>
+  );
+}
+
+export default function Preise() {
+  return (
+    <section className="page-section

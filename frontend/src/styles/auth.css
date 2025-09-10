@@ -1,0 +1,118 @@
+/* ================================
+   AIX Aleph — Auth Styles
+   ================================ */
+
+.auth-wrap{
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.auth-card{
+  background: var(--ui);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+
+.auth-head{
+  display: grid; gap: .25rem;
+}
+
+.auth-title{
+  font-size: 1.5rem; line-height: 2rem; font-weight: 800; letter-spacing: .2px;
+}
+
+.auth-sub{
+  color: var(--muted);
+}
+
+.auth-form{
+  margin-top: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.form-field{
+  display: grid; gap: 6px;
+}
+
+.form-label{
+  font-size: .875rem;
+  color: var(--muted);
+}
+
+.input-wrap{
+  position: relative;
+}
+
+.input-wrap .input{
+  width: 100%;
+  color: var(--ink);
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px 10px 40px; /* Platz für Icon */
+  outline: none;
+  transition: box-shadow .18s ease, border-color .18s ease, background-color .18s ease;
+}
+
+.input-wrap .input:focus{
+  border-color: color-mix(in oklab, var(--primary) 65%, var(--line));
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 20%, transparent);
+  background: rgba(255,255,255,.08);
+}
+
+.input-icon{
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  width: 18px; height: 18px; opacity: .75; pointer-events: none;
+  color: var(--ink);
+}
+
+.helper{
+  font-size: .8rem; color: var(--muted);
+}
+
+/* Aktionen */
+.auth-actions{
+  display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 6px;
+}
+
+.btn-primary{
+  background: linear-gradient(135deg, var(--primary), color-mix(in oklab, var(--primary) 60%, white));
+  border-color: transparent;
+  color: var(--primary-ink);
+}
+
+.btn-outline{
+  appearance: none;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600;
+  transition: background-color .18s ease, transform .12s ease, color .18s ease, border-color .18s ease;
+}
+
+.btn-outline:hover{ background: #1d1d1d; }
+
+/* Sektionen unterhalb des Formulars */
+.auth-foot{
+  margin-top: 12px; font-size: .9rem;
+}
+
+/* Kleine optische Aufwertung der Karte */
+.auth-glow{
+  position: relative;
+}
+.auth-glow::before{
+  content:""; position:absolute; inset:-16px -16px auto -16px; height: 120px; z-index:-1;
+  background: radial-gradient(60% 60% at 30% 0%, color-mix(in oklab, var(--primary) 12%, transparent), transparent 60%);
+  filter: blur(20px);
+  opacity: .7; pointer-events: none;
+}
+
+/* Mobile */
+@media (max-width: 520px){
+  .auth-wrap{ padding: 0 10px; }
+  .auth-actions{ flex-direction: column; align-items: stretch; gap: 10px; }
+}

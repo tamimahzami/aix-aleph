@@ -1,0 +1,87 @@
+/* ───────────────────────── Hero Orbit Add-Ons ───────────────────────── */
+.hero-wrap{
+  position:relative; isolation:isolate; min-height:520px;
+  border-radius:var(--radius-lg); overflow:hidden;
+  background:linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.25));
+}
+.hero-bg-grid{
+  position:absolute; inset:-2px; z-index:0;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0,162,255,.18), transparent 40%),
+    linear-gradient(transparent 0 0),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 1px, transparent 1px 60px),
+    repeating-linear-gradient(0deg,  rgba(255,255,255,.06) 0 1px, transparent 1px 60px);
+  mask-image: radial-gradient(80% 60% at 50% 40%, #000 60%, transparent 100%);
+}
+.hero-bg-glow{
+  position:absolute; inset:0; z-index:0;
+  filter: blur(44px);
+  background:
+    radial-gradient(900px 320px at 50% 20%, rgba(0,162,255,.22), transparent 60%),
+    radial-gradient(700px 260px at 80% 20%, rgba(255,90,0,.18), transparent 60%);
+  pointer-events:none;
+}
+
+.orbit{ position:absolute; inset:0; z-index:1; display:grid; place-items:center; }
+.orbit-ring{
+  position:absolute; width:min(80vmin, 720px); height:min(80vmin, 720px);
+  border-radius:50%; border:1px dashed rgba(255,255,255,.15);
+}
+.orbit-ring.r2{ width:min(60vmin, 560px); height:min(60vmin, 560px); animation:spin 18s linear infinite reverse; }
+.orbit-ring.r1{ animation:spin 22s linear infinite; }
+.orbit-ring.r3{ width:min(40vmin, 420px); height:min(40vmin, 420px); animation:spin 12s linear infinite; }
+
+.dot{
+  position:absolute; top:50%; left:50%;
+  width:10px; height:10px; border-radius:50%;
+  background: radial-gradient(circle, #9bdcff 0%, #00a2ff 60%, #0086d1 100%);
+  box-shadow:
+    0 0 18px rgba(0,162,255,.85),
+    0 0 42px rgba(0,162,255,.45);
+  transform: translate(-50%, -50%) translateX(calc(50% - 5px));
+}
+.r1 .dot{ animation: spin 22s linear infinite; }
+.r2 .dot{ animation: spin 14s linear infinite; }
+.r3 .dot{ animation: spin 9s  linear infinite; }
+
+@keyframes spin {
+  to { transform: rotate(360deg) translateX(calc(50% - 5px)) rotate(-360deg); }
+}
+
+/* Copy-Block im Hero */
+.hero-copy{
+  position:relative; z-index:2; margin:0 auto; margin-top:100px; max-width:780px;
+  background:rgba(23,23,23,.8); backdrop-filter: blur(8px);
+}
+.hero-copy .eyebrow{
+  letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+  font-size:.78rem; margin-bottom:8px;
+}
+.hero-title{
+  font-size: clamp(2rem, 4.8vw, 3.4rem);
+  line-height:1.08; margin:0 0 8px; font-weight:800;
+}
+.hero-sub{
+  margin:0 0 18px; color:#c7d2da; max-width:60ch;
+}
+.hero-cta{ display:flex; gap:.6rem; flex-wrap:wrap; margin-top:6px; }
+
+.hero-bullets{
+  display:flex; gap:1rem; flex-wrap:wrap; margin-top:14px;
+  padding:0; list-style:none; color:#a7b4bd; font-size:.95rem;
+}
+
+/* Kleine Feinheiten */
+.accent-text{ color:var(--primary); text-shadow:0 0 22px rgba(0,162,255,.35); }
+
+/* ───── Header/Footer Glows ───── */
+.header-shell, .footer-shell { position: relative; }
+.header-glow, .footer-line {
+  position:absolute; left:0; right:0; height:1px; z-index:0;
+  background:
+    radial-gradient(100% 120% at 50% 50%, rgba(0,162,255,.55), transparent 60%),
+    linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+  filter: blur(0.3px);
+}
+.header-glow { top: -2px; }
+.footer-line { bottom: -2px; }

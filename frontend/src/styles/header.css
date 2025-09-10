@@ -1,0 +1,102 @@
+/* ===== Header (vanilla CSS, ohne Tailwind) ===== */
+
+.header-root{
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(10px);
+  background: color-mix(in oklab, var(--color-background) 82%, transparent);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-inner{
+  max-width: 72rem; /* ~max-w-7xl */
+  margin: 0 auto;
+  padding: 0 1rem; /* px-4 */
+  height: 64px;    /* h-16 */
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+
+.brand{
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-weight: 700; letter-spacing: .02em; font-size: 17px;
+  color: var(--color-foreground); text-decoration: none;
+}
+.brand-mark{
+  width: 28px; height: 28px; border-radius: 9999px; position: relative;
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--color-primary) 85%, #fff 0%) 0 40%, transparent 60%),
+    conic-gradient(from 210deg at 50% 50%,
+      color-mix(in oklab, var(--color-primary) 75%, #000 25%) 0 55%,
+      transparent 55% 100%);
+  box-shadow:
+    0 0 0 1px var(--color-border) inset,
+    0 8px 24px color-mix(in oklab, var(--color-primary) 30%, transparent);
+}
+.brand-mark::after{
+  content: ""; position: absolute; inset: -6px; border-radius: inherit;
+  background: radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--color-primary) 35%, transparent), transparent 60%);
+  filter: blur(14px); opacity: .7; pointer-events: none;
+}
+
+.nav{ display: none; gap: .5rem; align-items: center; }
+@media (min-width: 768px){
+  .nav{ display: flex; }
+}
+
+/* ===== NavLink (Text + zarter Unterstrich bei Hover/Aktiv) ===== */
+.nav-link{
+  position: relative;
+  padding: .5rem .75rem;
+  border-radius: .5rem;
+  font-size: .875rem;
+  color: var(--color-foreground);
+  opacity: .85;
+  text-decoration: none;
+  transition: opacity .18s ease, background-color .18s ease;
+}
+.nav-link:hover{ opacity: 1; }
+.nav-link::after{
+  content:""; position:absolute; left:25%; right:25%; bottom:4px; height:2px;
+  background: linear-gradient(90deg, var(--primary), color-mix(in oklab, var(--primary) 70%, white));
+  border-radius: 9999px; opacity:0; transform: scaleX(.6); transition: all .25s ease;
+}
+.nav-link:hover::after,
+.nav-link[aria-current="page"]::after{ opacity:1; transform: scaleX(1); }
+
+/* ===== Cockpit Buttons (Dashboard / Login / Start) ===== */
+.cockpit-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:.5rem 1rem; border-radius:.75rem;
+  font-weight: 600; font-size:.9rem; text-decoration:none;
+  background: color-mix(in oklab, var(--color-muted) 30%, transparent);
+  color: var(--color-foreground);
+  transition: transform .15s ease, opacity .15s ease, box-shadow .2s ease, background .2s ease;
+  border: 1px solid color-mix(in oklab, var(--color-border) 80%, transparent);
+}
+.cockpit-btn:hover{
+  background: color-mix(in oklab, var(--color-primary) 18%, var(--color-muted));
+  color: var(--color-primary-foreground);
+  box-shadow: 0 6px 18px color-mix(in oklab, var(--color-primary) 25%, transparent);
+  transform: translateY(-1px);
+}
+.cockpit-btn:active{ transform: translateY(0); }
+
+.cockpit-btn[aria-current="page"]{
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  border-color: transparent;
+  box-shadow: 0 0 10px color-mix(in oklab, var(--color-primary) 40%, transparent);
+}
+
+/* Start = Logo-Gradient, immer gute Lesbarkeit */
+.cockpit-btn--start{
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    color-mix(in oklab, var(--primary) 60%, white)
+  );
+  color: #fff; border: 0;
+  box-shadow: 0 8px 22px color-mix(in oklab, var(--primary) 45%, transparent);
+}
+.cockpit-btn--start:hover{
+  opacity: .92; transform: translateY(-1px);
+}

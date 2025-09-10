@@ -1,13 +1,15 @@
 # ─────────────────────────────
-# Node.js
+# Node.js & Package Manager
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-# Achtung: package-lock.json nur ignorieren, wenn du es bewusst NICHT versionieren willst.
-# Für reproduzierbare Builds empfiehlt es sich, die Lockfile einzuchecken.
+
+# Lockfiles (optional ignorieren, wenn nicht versioniert werden sollen)
 # package-lock.json
+# pnpm-lock.yaml
+# yarn.lock
 
 # ─────────────────────────────
 # Build / Outputs
@@ -40,9 +42,9 @@ coverage/
 backup_*/
 backups/
 frontend-backup/
-_backup_storage/frontend-backup/
 frontend_backup_*/
 frontend_bak_*/
+_backup_storage/frontend-backup/
 *.zip
 *.tar
 *.tar.gz
@@ -53,11 +55,11 @@ web/
 frontend_old_*/
 
 # ─────────────────────────────
-# Doppel-Frontend-Pfad
+# Doppel-Frontend-Pfad (Altlast)
 frontend/frontend/
 
 # ─────────────────────────────
-# Frontend public build artefacts (alles ignorieren, außer Whitelist)
+# Frontend public build artefacts
 frontend/dist/*
 !frontend/dist/README.md
 !frontend/dist/manifest.json
@@ -65,15 +67,60 @@ frontend/dist/*
 !frontend/dist/favicon.svg
 
 # ─────────────────────────────
-# Backend public build artefacts (alles ignorieren, außer Whitelist)
+# Backend public build artefacts
 backend/public/*
 !backend/public/README.md
 !backend/public/manifest.json
 !backend/public/favicon.ico
 !backend/public/favicon.svg
-node_modules/
-dist/
-build/
-.env*
-.DS_Store
-node_modules/
+
+# ─────────────────────────────
+# PNPM / NPM Trash & Sonderfälle
+**/node_modules.trash*/
+**/.pnpm-debug.log*
+
+# Generierte Artefakte
+backend/src/generated/
+
+# Lockfiles ignorieren (wenn du sie NICHT versionieren willst)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# ─────────────────────────────
+# PNPM / NPM Trash & Sonderfälle
+**/node_modules.trash*/
+**/.pnpm-debug.log*
+**/pnpm-debug.log*
+
+# Generierte Artefakte
+backend/src/generated/
+
+# Lockfiles ignorieren (falls NICHT versioniert)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Node
+**/node_modules/
+**/.vite/
+**/dist/
+**/coverage/
+
+# Python / venv
+**/.venv/
+**/__pycache__/
+**/*.pyc
+
+# PNPM/NPM Trash
+**/node_modules.trash*/
+**/.pnpm-debug.log*
+**/pnpm-debug.log*
+
+# Generiert
+backend/src/generated/
+
+# Lockfiles (nur, wenn du sie NICHT versionieren willst)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

@@ -1,0 +1,27 @@
+import React, { Suspense, lazy } from "react";
+import { Routes, Route } from "react-router-dom";
+
+const modules = import.meta.glob("./pages/**/*.jsx");
+
+const autoRoutes = Object.entries(modules).map(([key, loader]) => {
+  const path = key
+    .replace("./pages", "")
+    .replace(/\/index\.jsx$/, "/")
+    .replace(/\.jsx$/, "")
+    || "/";
+
+  const Component = lazy(loader);
+  return { path, Component };
+});
+
+export default function AutoRouter() {
+  return (
+    <Suspense fallback={<div>Lädt…</div>}>
+      <Routes>
+        {autoRoutes.map(({ path, Component }) => (
+          <Route key={path} path={path} element={<Component />} />
+        ))}
+      </Routes>
+    </Suspense>
+  );
+}

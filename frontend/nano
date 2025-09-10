@@ -1,0 +1,10 @@
+export default function NotFound() {
+  return (
+    <div className="max-w-3xl mx-auto py-16 px-6">
+      <div className="panel text-center">
+        <h1 className="text-2xl font-bold">Seite nicht gefunden</h1>
+        <p className="opacity-80 mt-2">Die angeforderte Seite existiert nicht.</p>
+      </div>
+    </div>
+  );
+}
