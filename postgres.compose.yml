@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: uw_pico_509-postgres-1
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aix
+      POSTGRES_PASSWORD: aixpass
+      POSTGRES_DB: aixaleph
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5433:5432"   # Host-Port 5433
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -h 127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  pgdata:
